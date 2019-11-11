@@ -9,7 +9,7 @@ import java.util.*;
 /**
  * 根据权重第二次处理推荐列表
  */
-public class thirdSortMain {
+public class thirdSortMainThreshold {
     private static List<String> movieKind;
     private static Integer N = 0;
     private static Integer thresold = 0;
@@ -40,44 +40,43 @@ public class thirdSortMain {
 
     public static void main(String[] args) throws IOException, SQLException {
         //读取文件拿到各用户重排序后的推荐列表
-
-        for(int i = 1; i < 5;i ++){
-            N = 5 * i;
-            int fileN = 3 * N;
-            thresold = fileN/2;
-            Map<Integer, List<Integer>> resultMap = readFile(fileN);
-
-            Iterator<Map.Entry<Integer, List<Integer>>> iterator = resultMap.entrySet().iterator();
-            Map.Entry<Integer, List<Integer>> tempEntry;
-            Integer tempUserId;
-            List<Integer> tempMoviesIdList;
-            List<Integer> tempSelectMoviesIdList;
-            //遍历拿到权重选择后的推荐列表
-            Map<Integer, List<Integer>> afterSelectMap = new HashMap<>();
-            while (iterator.hasNext()){
-                tempEntry = iterator.next();
-                tempUserId = tempEntry.getKey();
-                tempMoviesIdList = tempEntry.getValue();
-                //根据用户id以及其推荐列表还有阈值重新权重选择推荐列表
-                tempSelectMoviesIdList = thirdSelectByUserIdAndList(tempUserId,tempMoviesIdList,thresold);
-                afterSelectMap.put(tempUserId,tempSelectMoviesIdList);
+        for(int ithreadshold = 34; ithreadshold < 39; ithreadshold++){
+            for(int i = 1; i < 5;i ++){
+                N = 5 * i;
+                Map<Integer, List<Integer>> resultMap = readFile(ithreadshold,N);
+                Iterator<Map.Entry<Integer, List<Integer>>> iterator = resultMap.entrySet().iterator();
+                Map.Entry<Integer, List<Integer>> tempEntry;
+                Integer tempUserId;
+                List<Integer> tempMoviesIdList;
+                List<Integer> tempSelectMoviesIdList;
+                //遍历拿到权重选择后的推荐列表
+                Map<Integer, List<Integer>> afterSelectMap = new HashMap<>();
+                while (iterator.hasNext()){
+                    tempEntry = iterator.next();
+                    tempUserId = tempEntry.getKey();
+                    tempMoviesIdList = tempEntry.getValue();
+                    thresold = tempMoviesIdList.size()/2;
+                    //根据用户id以及其推荐列表还有阈值重新权重选择推荐列表
+                    tempSelectMoviesIdList = thirdSelectByUserIdAndList(tempUserId,tempMoviesIdList,thresold);
+                    afterSelectMap.put(tempUserId,tempSelectMoviesIdList);
+                }
+                //输出到文件
+                //将结果输出到文件
+                StringBuffer str = new StringBuffer();
+                FileWriter fw = new FileWriter("D:\\OldRecommentAlgorithmWithoutAverage\\1M\\newsort\\resultThirdSortThreshold"+ithreadshold+"Top"+N+".txt", true);
+                Set set = afterSelectMap.entrySet();
+                Iterator iter = set.iterator();
+                while(iter.hasNext()){
+                    Map.Entry entry = (Map.Entry)iter.next();
+                    str.append(entry.getKey()+" : "+entry.getValue()).append("\n");
+                }
+                fw.write(str.toString());
+                fw.close();
+                tempMoviesIdList = null;
+                tempSelectMoviesIdList = null;
+                afterSelectMap = null;
+                resultMap = null;
             }
-            //输出到文件
-            //将结果输出到文件
-            StringBuffer str = new StringBuffer();
-            FileWriter fw = new FileWriter("D:\\OldRecommentAlgorithmWithoutAverage\\100K\\newsort\\resultThirdSortTop"+N+".txt", true);
-            Set set = afterSelectMap.entrySet();
-            Iterator iter = set.iterator();
-            while(iter.hasNext()){
-                Map.Entry entry = (Map.Entry)iter.next();
-                str.append(entry.getKey()+" : "+entry.getValue()).append("\n");
-            }
-            fw.write(str.toString());
-            fw.close();
-            tempMoviesIdList = null;
-            tempSelectMoviesIdList = null;
-            afterSelectMap = null;
-            resultMap = null;
         }
     }
 
@@ -88,9 +87,9 @@ public class thirdSortMain {
      * @throws IOException
      * @throws SQLException
      */
-    private static Map<Integer, List<Integer>> readFile(Integer N) throws IOException{
+    private static Map<Integer, List<Integer>> readFile(Integer ithreadshold,Integer N) throws IOException{
         Map<Integer, List<Integer>> resultMap = new HashMap<>();
-        BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream("D:\\OldRecommentAlgorithmWithoutAverage\\100K\\newsort\\resultAgainSortTop"+N+".txt")));
+        BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream("D:\\OldRecommentAlgorithmWithoutAverage\\1M\\newsort\\resultAgainSortThreshold"+ithreadshold+"Top"+N+".txt")));
         String data;
         Integer tempUserId;
         String tempMovieIds;
@@ -103,12 +102,15 @@ public class thirdSortMain {
                 tempUserId = Integer.valueOf(data.substring(0,data.indexOf(":")).trim());
                 tempMovieIds = data.substring(data.indexOf("[")+1,data.indexOf("]")).trim();
                 tempidListStr = Arrays.asList(tempMovieIds.split(","));
-                for (String str : tempidListStr){
-                    tempidListInt.add(Integer.valueOf(str.trim()));
+                if(tempidListStr.size() > 2*N){
+                    //System.out.println(tempidListStr.size());
+                    for (String str : tempidListStr){
+                        tempidListInt.add(Integer.valueOf(str.trim()));
+                    }
+                    //显示释放内存
+                    tempidListStr = null;
+                    resultMap.put(tempUserId,tempidListInt);
                 }
-                //显示释放内存
-                tempidListStr = null;
-                resultMap.put(tempUserId,tempidListInt);
             }
         }
         tempidListInt = null;

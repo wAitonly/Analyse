@@ -43,7 +43,7 @@ public class TestMain {
 
 
     public static void main(String[] args) throws SQLException, IOException {
-        ArrayList<float[]> dataSet = buildMovieRatingTable();
+        Map<Integer,float[]> dataSet = buildMovieRatingTable();
         int kMax = 11;
         //画sse折线图
         DefaultCategoryDataset dateset = new DefaultCategoryDataset();
@@ -127,9 +127,10 @@ public class TestMain {
      * @return
      */
     @Test
-    public static ArrayList<float[]> buildMovieRatingTable() throws SQLException {
-        ArrayList<float[]> dataSet = new ArrayList<>();
-        //拿到所有电影
+    public static Map<Integer,float[]> buildMovieRatingTable() throws SQLException {
+        //ArrayList<float[]> dataSet = new ArrayList<>();
+        Map<Integer,float[]> dataSet = new HashMap<>();
+        //拿到有效电影840
         List<Movies> movies = util.getMovies();
         //拿到有效用户495个
         List<Integer> users = util.selectBaseUser();
@@ -152,7 +153,7 @@ public class TestMain {
 //                    floats[i] = 0;
 //                }
             }
-            dataSet.add(floats);
+            dataSet.put(movie.getMovieId(),floats);
         }
         return dataSet;
     }

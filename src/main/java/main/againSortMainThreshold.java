@@ -1,12 +1,13 @@
 package main;
 
 import dao.InfoGetUtil;
+import org.omg.PortableInterceptor.INACTIVE;
 
 import java.io.*;
 import java.sql.SQLException;
 import java.util.*;
 
-public class againSortMain {
+public class againSortMainThreshold {
 
     private static List<String> movieKind;
     private static InfoGetUtil util = new InfoGetUtil();
@@ -36,9 +37,14 @@ public class againSortMain {
 
     public static void main(String[] args) throws SQLException, IOException {
         int N;
-        for(int i = 4; i < 5; i++){
-            N = i * 5 * 3;
-            actionAfterSort(N);
+        for(int i = 38; i < 39; i++){
+            for(int j = 3;j < 5; j++ ){
+               // if(i==37 && j < 4){
+               //     continue;
+              //  }
+                N = j * 5;
+                actionAfterSort(N,i);
+            }
         }
 
         //actionBeforeSort();
@@ -50,8 +56,8 @@ public class againSortMain {
      * 将1M重排序为resultAgainSort，再权重选择得到resultThirdSortTopN
      * 输出resultAgainSort
      */
-    private static void actionAfterSort(Integer N) throws IOException, SQLException {
-        Map<Integer, List<Integer>> recommentMap = readFile(N);
+    private static void actionAfterSort(Integer N,Integer threshold) throws IOException, SQLException {
+        Map<Integer, List<Integer>> recommentMap = readFile(threshold);
         Iterator<Map.Entry<Integer, List<Integer>>> iterator = recommentMap.entrySet().iterator();
         Map.Entry<Integer, List<Integer>> tempEntry;
         List<Integer> tempRecommentList;
@@ -66,14 +72,17 @@ public class againSortMain {
             //拿到该用户的19个大类C分类情况
             //该用户的推荐列表,目的给它重排序后塞回map
             tempRecommentList = tempEntry.getValue();
+            if(tempRecommentList.size() < 2 * N){
+                continue;
+            }
             //重排序后
             tempResultRecommentList = order(tempRecommentList,tempUserId);
             recommentMap.put(tempUserId,tempResultRecommentList);
-            System.out.println("正在进行Top"+N+"文件处理，共"+size+"个用户的推荐列表需要重排序,已完成"+(i++));
+            System.out.println("正在进行Treshold"+threshold+"Top"+N+"文件处理，共"+size+"个用户的推荐列表需要重排序,已完成"+(i++));
         }
         //将结果输出到文件
         StringBuffer str = new StringBuffer();
-        FileWriter fw = new FileWriter("D:\\OldRecommentAlgorithmWithoutAverage\\100K\\sort\\resultAgainSortTop"+N+".txt", true);
+        FileWriter fw = new FileWriter("D:\\OldRecommentAlgorithmWithoutAverage\\1M\\newsort\\resultAgainSortThreshold"+threshold+"Top"+N+".txt", true);
         Set set = recommentMap.entrySet();
         Iterator iter = set.iterator();
         while (iter.hasNext()) {
@@ -380,9 +389,9 @@ public class againSortMain {
         Map<Integer, List<String>> resultMapTemp = new HashMap<>();
         BufferedReader br;
         if(N == 0){
-            br = new BufferedReader(new InputStreamReader(new FileInputStream("D:\\OldRecommentAlgorithmWithoutAverage\\100K\\candidacyTop50.txt")));
+            br = new BufferedReader(new InputStreamReader(new FileInputStream("D:\\OldRecommentAlgorithmWithoutAverage\\1M\\candidacyThreshold50.txt")));
         }else {
-            br = new BufferedReader(new InputStreamReader(new FileInputStream("D:\\OldRecommentAlgorithmWithoutAverage\\100K\\candidacyTop"+N+".txt")));
+            br = new BufferedReader(new InputStreamReader(new FileInputStream("D:\\OldRecommentAlgorithmWithoutAverage\\1M\\candidacyThreshold"+N+".txt")));
         }
         String data;
         Integer tempUserId;
@@ -425,6 +434,9 @@ public class againSortMain {
             //tempMovieIdList = util.selectMovieIdByMovieName(tempMovieNameList);
             tempMovieIdList = new ArrayList<>();
             for(String str : tempMovieNameList){
+                if(str.trim().length() == 0){
+                    continue;
+                }
                 tempMovieIdList.add(Integer.valueOf(str.trim()));
             }
             resultMap.put(tempUserIdResult,tempMovieIdList);

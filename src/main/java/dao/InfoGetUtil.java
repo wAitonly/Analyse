@@ -129,6 +129,22 @@ public class InfoGetUtil {
     }
 
     /**
+     * 查询出该用户评论过的电影id
+     * @param userId
+     * @return
+     * @throws SQLException
+     */
+    public static List<Integer> selectMoviesByUserIdBase(Integer userId) throws SQLException {
+        List<Integer> resultList = new ArrayList<>();
+        PreparedStatement preparedStatement = new BatchExcuteUtil(connection).selectMoviesByUserIdBase(userId);
+        ResultSet resultSet = preparedStatement.executeQuery();
+        while (resultSet.next()){
+            resultList.add(resultSet.getInt("MovieID"));
+        }
+        return resultList;
+    }
+
+    /**
      * 查询出评论过指定电影的用户集合
      * @param movieId
      * @return
@@ -155,6 +171,22 @@ public class InfoGetUtil {
     public static List<String> selectMovieKindByUserId(Integer userId) throws SQLException {
         List<String> resultList = new ArrayList<>();
         PreparedStatement preparedStatement = new BatchExcuteUtil(connection).selectMovieKindByUserId(userId);
+        ResultSet resultSet = preparedStatement.executeQuery();
+        while (resultSet.next()){
+            resultList.add(resultSet.getString("Genres"));
+        }
+        return resultList;
+    }
+
+    /**
+     * 查询出该用户评论过的电影的类型
+     * @param userId
+     * @return
+     * @throws SQLException
+     */
+    public static List<String> selectMovieKindByUserIdBase(Integer userId) throws SQLException {
+        List<String> resultList = new ArrayList<>();
+        PreparedStatement preparedStatement = new BatchExcuteUtil(connection).selectMovieKindByUserIdBase(userId);
         ResultSet resultSet = preparedStatement.executeQuery();
         while (resultSet.next()){
             resultList.add(resultSet.getString("Genres"));
@@ -191,6 +223,22 @@ public class InfoGetUtil {
      */
     public static Integer selectRageByMovieId(Integer movieId) throws SQLException {
         PreparedStatement preparedStatement = new BatchExcuteUtil(connection).selectRageByMovieId(movieId);
+        ResultSet resultSet = preparedStatement.executeQuery();
+        Integer rage = 0;
+        while (resultSet.next()){
+            rage = resultSet.getInt("rage");
+        }
+        return rage;
+    }
+
+    /**
+     * 根据电影id获取该电影的流行度，即该电影被多少人评分过
+     * @param movieId
+     * @return
+     * @throws SQLException
+     */
+    public static Integer selectRageByMovieIdBase(Integer movieId) throws SQLException {
+        PreparedStatement preparedStatement = new BatchExcuteUtil(connection).selectRageByMovieIdBase(movieId);
         ResultSet resultSet = preparedStatement.executeQuery();
         Integer rage = 0;
         while (resultSet.next()){

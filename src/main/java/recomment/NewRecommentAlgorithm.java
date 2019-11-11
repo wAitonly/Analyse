@@ -579,7 +579,7 @@ public class NewRecommentAlgorithm {
     public Double countKindLike(Integer u) throws SQLException {
         double resultCount = 0.0;
         //拿到该用户评论过的电影类型
-        List<String> userKindList = util.selectMovieKindByUserId(u);
+        List<String> userKindList = util.selectMovieKindByUserIdBase(u);
         //用户评分总数
         double sumRatingCount = userKindList.size();
         //遍历18个电影类型

@@ -11,13 +11,11 @@ import java.nio.channels.FileChannel;
 import java.sql.SQLException;
 import java.util.*;
 
-import static java.util.stream.Collectors.toList;
-
 /**
  * 核心算法
  * zhaobenquan
  */
-public class OldRecommentAlgorithm {
+public class OldRecommentAlgorithmByThreshold {
 
     private static Map<Integer,Map<Integer,Integer>> overAllMap;
     private static Comparator<Map.Entry<Integer,Double>> valueComparator;
@@ -307,11 +305,11 @@ public class OldRecommentAlgorithm {
      * //Map<Integer,Map<Integer,Double>> userSimMap = buildUserUserSimTable();
      * @return
      */
-    public void buildRecommendList(Map<Integer,Map<Integer,Double>> userSimMap,Integer movieNumber) throws IOException {
-        System.out.println("-------开始构建top"+movieNumber+"候选列表");
+    public void buildRecommendList(Map<Integer,Map<Integer,Double>> userSimMap,double threshold,Integer movieNumber) throws IOException {
+        System.out.println("-------开始构建threshold"+threshold+"候选列表");
         //直接打印到文件
         StringBuffer stringBuffer = new StringBuffer();
-        FileWriter fileWriter = new FileWriter("D:\\OldRecommentAlgorithmWithoutAverage\\100K\\candidacyTop"+movieNumber+".txt", true);
+        FileWriter fileWriter = new FileWriter("D:\\OldRecommentAlgorithmWithoutAverage\\1M\\candidacyThreshold"+threshold+".txt", true);
         List<Integer> tempMovieList;
         //获取每个用户的前N和最相似用户
         Map<Integer,List<Integer>> simUserMap = buildsimUserList(userSimMap);
@@ -398,7 +396,7 @@ public class OldRecommentAlgorithm {
             tempMovieList = new ArrayList<>();
             while (iteratorInn.hasNext()){
                 tempEntryInn = iteratorInn.next();
-                if(tempMovieList.size() < movieNumber){
+                if(tempEntryInn.getValue() > threshold && tempMovieList.size() < movieNumber){
                     tempMovieList.add(tempEntryInn.getKey());
                 }
             }

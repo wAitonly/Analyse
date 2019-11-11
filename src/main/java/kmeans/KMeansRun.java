@@ -10,15 +10,15 @@ public class KMeansRun {
     private int iterRunTimes = 0;                 //单次迭代实际运行次数
     private float disDiff = (float) 0.01;         //单次迭代终止条件，两次运行中类中心的距离差
 
-    private List<float[]> original_data =null;    //用于存放，原始数据集
+    private Map<Integer,float[]> original_data;    //用于存放，原始数据集
     private static List<Point> pointList = null;  //用于存放，原始数据集所构建的点集
     private DistanceCompute disC = new DistanceCompute();
-    private int len = 0;                          //用于记录每个数据点的维度
+    private int len;                          //用于记录每个数据点的维度
 
-    public KMeansRun(int k, List<float[]> original_data) {
+    public KMeansRun(int k, Map<Integer,float[]> original_data) {
         this.kNum = k;
         this.original_data = original_data;
-        this.len = original_data.get(0).length;
+        this.len = original_data.get(1).length;
         //检查规范
         check();
         //初始化点集。
@@ -41,9 +41,12 @@ public class KMeansRun {
      * 初始化数据集，把数组转化为Point类型。
      */
     private void init() {
-        pointList = new ArrayList<Point>();
-        for (int i = 0, j = original_data.size(); i < j; i++){
-            pointList.add(new Point(i, original_data.get(i)));
+        pointList = new ArrayList<>();
+        Iterator<Map.Entry<Integer,float[]>> iterator = original_data.entrySet().iterator();
+        Map.Entry<Integer,float[]> tempEntry;
+        while (iterator.hasNext()){
+            tempEntry = iterator.next();
+            pointList.add(new Point(tempEntry.getKey(), tempEntry.getValue()));
         }
     }
 

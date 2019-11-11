@@ -27,10 +27,14 @@ public class BatchExcuteUtil {
     private static final String selectUserCount = "select count(distinct UserID) as num from ratings";
 
     //查询电影信息
-    private static final String selectMovies = "select MovieID,Title,Genres from movies";
+    //private static final String selectMovies = "select MovieID,Title,Genres from movies";
+    private static final String selectMovies = "  select distinct m.MovieID,m.Title,m.Genres from movies m join baseratings br on br.MovieID = m.MovieID";
 
     //查询电影根据用户id
     private static final String selectMoviesByUserId = "select MovieID from ratings where UserID = ";
+
+    //查询电影根据用户id
+    private static final String selectMoviesByUserIdBase = "select MovieID from baseratings where UserID = ";
 
     //查询用户id根据电影
     private static final String selectUsersByMovieId = "select UserID from ratings where MovieID = ";
@@ -99,6 +103,15 @@ public class BatchExcuteUtil {
     }
 
     /**
+     * 查询电影根据用户id
+     * @return
+     */
+    public PreparedStatement selectMoviesByUserIdBase(Integer userId) throws SQLException {
+        preparedStatement = connection.prepareStatement(selectMoviesByUserIdBase+userId);
+        return preparedStatement;
+    }
+
+    /**
      * //查询用户id根据电影
      * @return
      */
@@ -121,6 +134,22 @@ public class BatchExcuteUtil {
                    + " from movies m"
                    + " left join ratings r on m.MovieID = r.MovieID"
                    + " where r.UserID = " + userId;
+        preparedStatement = connection.prepareStatement(str);
+        return preparedStatement;
+    }
+
+    /**
+     * 根据用户id查询出该用户评论过点电影的类型列表
+     * @param userId
+     * @return
+     * @throws SQLException
+     */
+    public PreparedStatement selectMovieKindByUserIdBase(Integer userId) throws SQLException{
+        String str = " select"
+                + " m.Genres"
+                + " from movies m"
+                + " left join baseratings r on m.MovieID = r.MovieID"
+                + " where r.UserID = " + userId;
         preparedStatement = connection.prepareStatement(str);
         return preparedStatement;
     }
@@ -150,6 +179,21 @@ public class BatchExcuteUtil {
         String str = " select "
                 + " count(MovieId) as rage"
                 + " from ratings "
+                + " where MovieId = " + movieId;
+        preparedStatement = connection.prepareStatement(str);
+        return preparedStatement;
+    }
+
+    /**
+     * 根据电影id获取该电影的流行度，即该电影被多少人评分过
+     * @param movieId
+     * @return
+     * @throws SQLException
+     */
+    public PreparedStatement selectRageByMovieIdBase(Integer movieId) throws SQLException{
+        String str = " select "
+                + " count(MovieId) as rage"
+                + " from baseratings "
                 + " where MovieId = " + movieId;
         preparedStatement = connection.prepareStatement(str);
         return preparedStatement;

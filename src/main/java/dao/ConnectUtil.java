@@ -8,7 +8,7 @@ public class ConnectUtil {
     //数据库连接
     public static Connection connection;
     //连接url
-    private static String URL = "jdbc:sqlserver://localhost:1433;database=100K";
+    private static String URL = "jdbc:sqlserver://localhost:1433;database=1M";
     //驱动地址
     private static String DRIVERPATH = "com.microsoft.sqlserver.jdbc.SQLServerDriver";
     //数据库用户名和密码
