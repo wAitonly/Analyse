@@ -14,8 +14,8 @@ public class againSortMainKmeans {
     private static InfoGetUtil util = new InfoGetUtil();
     static {
         try {
-            KindMovieMap = getKindMovieByReadFile(4);
-            movieKindMap = getMovieKindByReadFile(4);
+            KindMovieMap = getKindMovieByReadFile(5);
+            movieKindMap = getMovieKindByReadFile(5);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -26,8 +26,8 @@ public class againSortMainKmeans {
 
     public static void main(String[] args) throws SQLException, IOException {
         int N;
-        for(int i = 1; i < 5; i++){
-            N = i * 5 * 3;
+        for(int i = 4; i <= 5; i++){
+            N = (i -1)*5 + 10;
             actionAfterSort(N);
         }
 
@@ -53,7 +53,6 @@ public class againSortMainKmeans {
             tempEntry = iterator.next();
             //该用户id
             tempUserId = tempEntry.getKey();
-            //拿到该用户的19个大类C分类情况
             //该用户的推荐列表,目的给它重排序后塞回map
             tempRecommentList = tempEntry.getValue();
             //重排序后
@@ -63,7 +62,7 @@ public class againSortMainKmeans {
         }
         //将结果输出到文件
         StringBuffer str = new StringBuffer();
-        FileWriter fw = new FileWriter("D:\\OldRecommentAlgorithmWithoutAverage\\100K\\newsort\\resultAgainSortTop"+N+".txt", true);
+        FileWriter fw = new FileWriter("D:\\OldRecommentAlgorithmWithoutAverage\\1M\\sort\\resultAgainSortTop"+N+".txt", true);
         Set set = recommentMap.entrySet();
         Iterator iter = set.iterator();
         while (iter.hasNext()) {
@@ -220,17 +219,21 @@ public class againSortMainKmeans {
             tempMovieKind = movieKindMap.get(movieId);
             //获取该电影的C型号
             tempC = splitKindMap.get(tempMovieKind);
-            //根据C类别分类
-            switch (tempC){
-                case 1:
-                    C1List.add(movieId);
-                    break;
-                case 2:
-                    C2List.add(movieId);
-                    break;
-                case 3:
-                    C3List.add(movieId);
-                    break;
+            if(null == tempC){
+                C3List.add(movieId);
+            }else {
+                //根据C类别分类
+                switch (tempC){
+                    case 1:
+                        C1List.add(movieId);
+                        break;
+                    case 2:
+                        C2List.add(movieId);
+                        break;
+                    case 3:
+                        C3List.add(movieId);
+                        break;
+                }
             }
             //获取该电影的流行度，即该电影被多少人评分过
             tempRage =util.selectRageByMovieIdBase(movieId);
@@ -370,9 +373,9 @@ public class againSortMainKmeans {
         Map<Integer, List<String>> resultMapTemp = new HashMap<>();
         BufferedReader br;
         if(N == 0){
-            br = new BufferedReader(new InputStreamReader(new FileInputStream("D:\\OldRecommentAlgorithmWithoutAverage\\100K\\candidacyTop50.txt")));
+            br = new BufferedReader(new InputStreamReader(new FileInputStream("D:\\OldRecommentAlgorithmWithoutAverage\\1M\\candidacyTop50.txt")));
         }else {
-            br = new BufferedReader(new InputStreamReader(new FileInputStream("D:\\OldRecommentAlgorithmWithoutAverage\\100K\\candidacyTop"+N+".txt")));
+            br = new BufferedReader(new InputStreamReader(new FileInputStream("D:\\OldRecommentAlgorithmWithoutAverage\\1M\\candidacyTop"+N+".txt")));
         }
         String data;
         Integer tempUserId;
@@ -433,7 +436,7 @@ public class againSortMainKmeans {
      */
     public static Map<Integer,List<Integer>> getKindMovieByReadFile(Integer K) throws IOException {
         Map<Integer, List<Integer>> kindMovieMap = new HashMap<>();
-        BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream("D:\\Kmeans\\K"+K+".txt")));
+        BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream("D:\\Kmeans\\Kmeans"+K+".txt")));
         String data;
         Integer tempMovieId = -1;
         Integer tempKindId = -1;
@@ -457,7 +460,7 @@ public class againSortMainKmeans {
      */
     public static Map<Integer,Integer> getMovieKindByReadFile(Integer K) throws IOException {
         Map<Integer, Integer> movieKindMap = new HashMap<>();
-        BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream("D:\\Kmeans\\K"+K+".txt")));
+        BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream("D:\\Kmeans\\Kmeans"+K+".txt")));
         String data;
         Integer tempMovieId = -1;
         Integer tempKindId = -1;

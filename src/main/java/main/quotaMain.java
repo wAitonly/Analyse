@@ -14,6 +14,7 @@ import java.util.*;
 public class quotaMain {
     private static InfoGetUtil util = new InfoGetUtil();
     private static Integer N = 0;
+    private static Integer totalMovieCount = 3883;
     private static Map<Integer,Map<Integer,Integer>> overAllMap;
     static {
         overAllMap = new HashMap<>();
@@ -41,23 +42,25 @@ public class quotaMain {
     public static void main(String[] args) throws IOException, SQLException {
         String testStr = new InfoGetUtil().selectMovieKindByMovieId(2);
         System.out.println(testStr);
-        for(int threshold = 38; threshold < 39; threshold++){
+        int tempFileN;
+        for(int threshold = 1; threshold < 5; threshold++){
             for(int i = 1; i < 5;i ++){
-                if(threshold == 38 && i < 3){
-                    continue;
-                }
-                N = 5 * i;
+//                if(threshold == 38 && i < 3){
+//                    continue;
+//                }
+                tempFileN = (i -1)*5 + 10;
+                N = 5;
                 //讀取推薦列表
-                Map<Integer, List<Integer>> recommentMap = readFile(threshold,N);
-                printHit(recommentMap,N,threshold);
-                printPrecision(recommentMap,N,threshold);
-                printRecall(recommentMap,N,threshold);
-                printHD(recommentMap,N,threshold);
-                printNovelty(recommentMap,N,threshold);
-                printCoverage(recommentMap,N,threshold);
-                printILD(recommentMap,N,threshold);
-                printAverageHD(N,threshold);
-                printCoverageAll(recommentMap,N,threshold);
+                Map<Integer, List<Integer>> recommentMap = readFile(threshold,N,tempFileN);
+                printHit(recommentMap,N,threshold,tempFileN);
+                printPrecision(recommentMap,N,threshold,tempFileN);
+                printRecall(recommentMap,N,threshold,tempFileN);
+                printHD(recommentMap,N,threshold,tempFileN);
+                printNovelty(recommentMap,N,threshold,tempFileN);
+                printCoverage(recommentMap,N,threshold,tempFileN);
+                printILD(recommentMap,N,threshold,tempFileN);
+                printAverageHD(N,threshold,tempFileN);
+                printCoverageAll(recommentMap,N,threshold,tempFileN);
                 recommentMap = null;
             }
         }
@@ -71,9 +74,9 @@ public class quotaMain {
      * @throws IOException
      * @throws SQLException
      */
-    private static Map<Integer, List<Integer>> readFile(Integer threshold,Integer N) throws IOException{
+    private static Map<Integer, List<Integer>> readFile(Integer threshold,Integer N,Integer fileN) throws IOException{
         Map<Integer, List<Integer>> resultMap = new HashMap<>();
-        BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream("D:\\OldRecommentAlgorithmWithoutAverage\\1M\\newsort\\resultThirdSortThreshold"+threshold+"Top"+N+".txt")));
+        BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream("D:\\OldRecommentAlgorithmWithoutAverage\\1M\\sort\\resultThirdSortTop"+N+"Threshold"+threshold+"Len"+fileN+".txt")));
         String data;
         Integer tempUserId;
         String tempMovieIds;
@@ -98,18 +101,18 @@ public class quotaMain {
         return  resultMap;
     }
 
-    private static void printCoverageAll(Map<Integer, List<Integer>> recommentMap,Integer N,Integer threshold) throws IOException, SQLException {
+    private static void printCoverageAll(Map<Integer, List<Integer>> recommentMap,Integer N,Integer threshold,Integer fileN) throws IOException, SQLException {
         Double coverageAll = CoverageAll(recommentMap);
         //输出到文件
         //将结果输出到文件
         StringBuffer strCoverageAll = new StringBuffer();
         strCoverageAll.append("該算法整体覆盖率為："+strCoverageAll).append(coverageAll).append("\n");
-        FileWriter fwCoverageAll = new FileWriter("D:\\OldRecommentAlgorithmWithoutAverage\\1M\\newsort\\Threshold"+threshold+"Top"+N+"\\CoverageAll.txt", true);
+        FileWriter fwCoverageAll = new FileWriter("D:\\OldRecommentAlgorithmWithoutAverage\\1M\\sort\\Top"+N+"Threshold"+threshold+"Len"+fileN+"\\CoverageAll.txt", true);
         fwCoverageAll.write(strCoverageAll.toString());
         fwCoverageAll.close();
     }
 
-    private static void printHit(Map<Integer, List<Integer>> recommentMap,Integer N,Integer threshold) throws IOException, SQLException {
+    private static void printHit(Map<Integer, List<Integer>> recommentMap,Integer N,Integer threshold,Integer fileN) throws IOException, SQLException {
         //計算命中個數
         Map<Integer,Integer> Hit = hit(recommentMap);
         Set<Integer> userIdList = Hit.keySet();
@@ -123,7 +126,7 @@ public class quotaMain {
         StringBuffer strPrecision = new StringBuffer();
         strPrecision.append("該算法平均命中個數為："+percision).append("\n");
         strPrecision.append("以下是各推薦列表命中個數").append("\n");
-        FileWriter fwPrecision = new FileWriter("D:\\OldRecommentAlgorithmWithoutAverage\\1M\\newsort\\Threshold"+threshold+"Top"+N+"\\Hit.txt", true);
+        FileWriter fwPrecision = new FileWriter("D:\\OldRecommentAlgorithmWithoutAverage\\1M\\sort\\Top"+N+"Threshold"+threshold+"Len"+fileN+"\\Hit.txt", true);
         Set set = Hit.entrySet();
         Iterator iterPrecision = set.iterator();
         while(iterPrecision.hasNext()){
@@ -136,7 +139,7 @@ public class quotaMain {
         userIdList = null;
     }
 
-    private static void printPrecision(Map<Integer, List<Integer>> recommentMap,Integer N,Integer threshold) throws SQLException, IOException {
+    private static void printPrecision(Map<Integer, List<Integer>> recommentMap,Integer N,Integer threshold,Integer fileN) throws SQLException, IOException {
         //計算準確率
         Map<Integer,Double> Precision = Precision(recommentMap);
         Set<Integer> userIdList = Precision.keySet();
@@ -150,7 +153,7 @@ public class quotaMain {
         StringBuffer strPrecision = new StringBuffer();
         strPrecision.append("該算法準確性為："+percision).append("\n");
         strPrecision.append("以下是各推薦列表準確率").append("\n");
-        FileWriter fwPrecision = new FileWriter("D:\\OldRecommentAlgorithmWithoutAverage\\1M\\newsort\\Threshold"+threshold+"Top"+N+"\\Precision.txt", true);
+        FileWriter fwPrecision = new FileWriter("D:\\OldRecommentAlgorithmWithoutAverage\\1M\\sort\\Top"+N+"Threshold"+threshold+"Len"+fileN+"\\Precision.txt", true);
         Set set = Precision.entrySet();
         Iterator iterPrecision = set.iterator();
         while(iterPrecision.hasNext()){
@@ -163,7 +166,7 @@ public class quotaMain {
         userIdList = null;
     }
 
-    private static void printRecall(Map<Integer, List<Integer>> recommentMap,Integer N,Integer threshold) throws SQLException, IOException{
+    private static void printRecall(Map<Integer, List<Integer>> recommentMap,Integer N,Integer threshold,Integer fileN) throws SQLException, IOException{
         //計算召回率
         Map<Integer,Double> Recall = Recall(recommentMap);
         Set<Integer> userIdList = Recall.keySet();
@@ -177,7 +180,7 @@ public class quotaMain {
         StringBuffer strRecall = new StringBuffer();
         strRecall.append("該算法召回率為："+recall).append("\n");
         strRecall.append("以下是各推薦列表召回率").append("\n");
-        FileWriter fwRecall = new FileWriter("D:\\OldRecommentAlgorithmWithoutAverage\\1M\\newsort\\Threshold"+threshold+"Top"+N+"\\Recall.txt", true);
+        FileWriter fwRecall = new FileWriter("D:\\OldRecommentAlgorithmWithoutAverage\\1M\\sort\\Top"+N+"Threshold"+threshold+"Len"+fileN+"\\Recall.txt", true);
         Set setRecall = Recall.entrySet();
         Iterator iterRecall = setRecall.iterator();
         while(iterRecall.hasNext()){
@@ -190,7 +193,7 @@ public class quotaMain {
         userIdList = null;
     }
 
-    private static void printHD(Map<Integer, List<Integer>> recommentMap,Integer N,Integer threshold) throws SQLException, IOException{
+    private static void printHD(Map<Integer, List<Integer>> recommentMap,Integer N,Integer threshold,Integer fileN) throws SQLException, IOException{
         //計算海明距離
         Map<Integer,Map<Integer,Double>> HD = HD(recommentMap);
         Set<Integer> userIdList = HD.keySet();
@@ -210,7 +213,7 @@ public class quotaMain {
         //输出到文件
         //将结果输出到文件
         StringBuffer strHD = new StringBuffer();
-        FileWriter fwHD = new FileWriter("D:\\OldRecommentAlgorithmWithoutAverage\\1M\\newsort\\Threshold"+threshold+"Top"+N+"\\HD.txt", true);
+        FileWriter fwHD = new FileWriter("D:\\OldRecommentAlgorithmWithoutAverage\\1M\\sort\\Top"+N+"Threshold"+threshold+"Len"+fileN+"\\HD.txt", true);
         Set set = HD.entrySet();
         Iterator iterHD = set.iterator();
         while(iterHD.hasNext()){
@@ -223,7 +226,7 @@ public class quotaMain {
         userIdList = null;
     }
 
-    private static void printNovelty(Map<Integer, List<Integer>> recommentMap,Integer N,Integer threshold) throws SQLException, IOException{
+    private static void printNovelty(Map<Integer, List<Integer>> recommentMap,Integer N,Integer threshold,Integer fileN) throws SQLException, IOException{
         //計算新新型
         Map<Integer,Double> Novelty = Novelty(recommentMap);
         Set<Integer> userIdList = Novelty.keySet();
@@ -237,7 +240,7 @@ public class quotaMain {
         StringBuffer strNovelty = new StringBuffer();
         strNovelty.append("該算法平均新新型為："+novelty).append("\n");
         strNovelty.append("以下是各推薦列表新新型").append("\n");
-        FileWriter fwNovelty = new FileWriter("D:\\OldRecommentAlgorithmWithoutAverage\\1M\\newsort\\Threshold"+threshold+"Top"+N+"\\Novelty.txt", true);
+        FileWriter fwNovelty = new FileWriter("D:\\OldRecommentAlgorithmWithoutAverage\\1M\\sort\\Top"+N+"Threshold"+threshold+"Len"+fileN+"\\Novelty.txt", true);
         Set setNovelty = Novelty.entrySet();
         Iterator iterNovelty = setNovelty.iterator();
         while(iterNovelty.hasNext()){
@@ -250,7 +253,7 @@ public class quotaMain {
         userIdList = null;
     }
 
-    private static void printCoverage(Map<Integer, List<Integer>> recommentMap,Integer N,Integer threshold) throws SQLException, IOException{
+    private static void printCoverage(Map<Integer, List<Integer>> recommentMap,Integer N,Integer threshold,Integer fileN) throws SQLException, IOException{
         //計算覆蓋率
         Map<Integer,Double> Coverage = Coverage(recommentMap);
         Set<Integer> userIdList = Coverage.keySet();
@@ -264,7 +267,7 @@ public class quotaMain {
         StringBuffer strCoverage = new StringBuffer();
         strCoverage.append("該算法平均覆蓋率為："+coverage).append("\n");
         strCoverage.append("以下是各推薦列表覆蓋率").append("\n");
-        FileWriter fwCoverage = new FileWriter("D:\\OldRecommentAlgorithmWithoutAverage\\1M\\newsort\\Threshold"+threshold+"Top"+N+"\\Coverage.txt", true);
+        FileWriter fwCoverage = new FileWriter("D:\\OldRecommentAlgorithmWithoutAverage\\1M\\sort\\Top"+N+"Threshold"+threshold+"Len"+fileN+"\\Coverage.txt", true);
         Set setCoverage = Coverage.entrySet();
         Iterator iterCoverage = setCoverage.iterator();
         while(iterCoverage.hasNext()){
@@ -277,7 +280,7 @@ public class quotaMain {
         userIdList = null;
     }
 
-    private static void printILD(Map<Integer, List<Integer>> recommentMap,Integer N,Integer threshold) throws SQLException, IOException{
+    private static void printILD(Map<Integer, List<Integer>> recommentMap,Integer N,Integer threshold,Integer fileN) throws SQLException, IOException{
         //計算ILD
         Map<Integer,Double> ILD = countILD(recommentMap);
         Set<Integer> userIdList = ILD.keySet();
@@ -291,7 +294,7 @@ public class quotaMain {
         StringBuffer strILD = new StringBuffer();
         strILD.append("該算法平均ILD為："+coverage).append("\n");
         strILD.append("以下是各推薦列表ILD").append("\n");
-        FileWriter fwILD = new FileWriter("D:\\OldRecommentAlgorithmWithoutAverage\\1M\\newsort\\Threshold"+threshold+"Top"+N+"\\ILD.txt", true);
+        FileWriter fwILD = new FileWriter("D:\\OldRecommentAlgorithmWithoutAverage\\1M\\sort\\Top"+N+"Threshold"+threshold+"Len"+fileN+"\\ILD.txt", true);
         Set setILD = ILD.entrySet();
         Iterator iterILD = setILD.iterator();
         while(iterILD.hasNext()){
@@ -304,9 +307,9 @@ public class quotaMain {
         userIdList = null;
     }
 
-    private static void printAverageHD(Integer N,Integer threshold) throws IOException{
+    private static void printAverageHD(Integer N,Integer threshold,Integer fileN) throws IOException{
         //計算平均海明距離
-        Map<Integer,Double> averageHD = averageHD(N,threshold);
+        Map<Integer,Double> averageHD = averageHD(N,threshold,fileN);
         Set<Integer> userIdList = averageHD.keySet();
         double per = 0.00;
         for(Integer userId : userIdList){
@@ -318,7 +321,7 @@ public class quotaMain {
         StringBuffer strHd = new StringBuffer();
         strHd.append("該算法平均海明距離為："+hd).append("\n");
         strHd.append("以下是各推薦列表海明距離").append("\n");
-        FileWriter fwHd = new FileWriter("D:\\OldRecommentAlgorithmWithoutAverage\\1M\\newsort\\Threshold"+threshold+"Top"+N+"\\AverageHD.txt", true);
+        FileWriter fwHd = new FileWriter("D:\\OldRecommentAlgorithmWithoutAverage\\1M\\sort\\Top"+N+"Threshold"+threshold+"Len"+fileN+"\\AverageHD.txt", true);
         Set set = averageHD.entrySet();
         Iterator iterHd = set.iterator();
         while(iterHd.hasNext()){
@@ -537,9 +540,9 @@ public class quotaMain {
      * 計算海明距離平均值
      *
      */
-    private static Map<Integer,Double> averageHD(Integer N,Integer threshold) throws IOException {
+    private static Map<Integer,Double> averageHD(Integer N,Integer threshold,Integer fileN) throws IOException {
         Map<Integer,Double> resultMap = new HashMap<>();
-        BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream("D:\\OldRecommentAlgorithmWithoutAverage\\1M\\newsort\\Threshold"+threshold+"Top"+N+"\\HD.txt")));
+        BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream("D:\\OldRecommentAlgorithmWithoutAverage\\1M\\sort\\Top"+N+"Threshold"+threshold+"Len"+fileN+"\\HD.txt")));
         String data;
         String tempUserId;
         String tempHD;
@@ -571,7 +574,7 @@ public class quotaMain {
         Map.Entry<Integer, List<Integer>> tempEntry;
         while (iterator.hasNext()){
             tempEntry = iterator.next();
-            resultMap.put(tempEntry.getKey(),tempEntry.getValue().size()/(3883*1.000));
+            resultMap.put(tempEntry.getKey(),tempEntry.getValue().size()/(totalMovieCount*1.000));
         }
         return resultMap;
     }
@@ -596,7 +599,7 @@ public class quotaMain {
                 }
             }
         }
-        return movieIdList.size()/(3883*1.00);
+        return movieIdList.size()/(totalMovieCount*1.00);
     }
 
     /**

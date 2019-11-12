@@ -88,8 +88,8 @@ public class TestMain {
         CategoryPlot plot = (CategoryPlot) chart.getPlot();
         plot.setBackgroundPaint(ChartColor.WHITE);
         NumberAxis rangeAxis = (NumberAxis) plot.getRangeAxis();
-        rangeAxis.setLowerBound(2000);
-        rangeAxis.setUpperBound(14200);
+        rangeAxis.setLowerBound(30000);
+        rangeAxis.setUpperBound(65000);
         rangeAxis.setAutoTickUnitSelection(false);
         NumberTickUnit unit = new NumberTickUnit(800);
         rangeAxis.setTickUnit(unit);
@@ -130,9 +130,9 @@ public class TestMain {
     public static Map<Integer,float[]> buildMovieRatingTable() throws SQLException {
         //ArrayList<float[]> dataSet = new ArrayList<>();
         Map<Integer,float[]> dataSet = new HashMap<>();
-        //拿到有效电影840
+        //拿到有效电影
         List<Movies> movies = util.getMovies();
-        //拿到有效用户495个
+        //拿到有效用户
         List<Integer> users = util.selectBaseUser();
         //生成矩阵
         float[] floats;

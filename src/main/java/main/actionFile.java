@@ -16,7 +16,8 @@ public class actionFile {
         //actionRatingsDat();
         //actionMoviesDat();
         //actionuItem();
-        actionRatingsDatFromDB();
+        //actionRatingsDatFromDB();
+        actionRatingsDatFromDB60();
     }
 
     /**
@@ -222,6 +223,41 @@ public class actionFile {
         //将结果输出到文件
         StringBuffer str = new StringBuffer();
         FileWriter fw = new FileWriter("D:\\Python\\data\\ml-100k\\ratings.txt", true);
+        for(String tempstr : resultStrList){
+            str.append(tempstr).append("\n");
+        }
+        resultStrList = null;
+        fw.write(str.toString());
+        fw.close();
+    }
+
+    /**
+     * 从数据库中读出Allratings
+     * 只输出
+     * 前60%个评论电影最多的用户的评分数据为newratings.txt
+     */
+    private static void actionRatingsDatFromDB60() throws IOException, SQLException {
+        InfoGetUtil util = new InfoGetUtil();
+        //处理ratings.dat
+        //拿到按前5到2830个评论电影最多的用户
+        List<Integer> sortUsers = util.selectUserCountMovie().subList(0,3624);
+        //从数据库中读出所有评分
+        List<Ratings> allratings = new InfoGetUtil().getAllRatings();
+        //输出到文件
+        Set<String> resultStrList = new HashSet<>();
+        StringBuffer tempResultStr;
+        for(Ratings rating : allratings){
+            tempResultStr = new StringBuffer();
+            if(sortUsers.contains(rating.getUserId())){
+                tempResultStr.append(rating.getUserId()).append(" ")
+                        .append(rating.getMovieId()).append(" ")
+                        .append(rating.getRating());
+                resultStrList.add(tempResultStr.toString());
+            }
+        }
+        //将结果输出到文件
+        StringBuffer str = new StringBuffer();
+        FileWriter fw = new FileWriter("D:\\Python\\data\\ml-1m\\percentratings.txt", true);
         for(String tempstr : resultStrList){
             str.append(tempstr).append("\n");
         }
