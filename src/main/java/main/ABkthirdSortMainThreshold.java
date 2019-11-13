@@ -9,7 +9,7 @@ import java.util.*;
 /**
  * 根据权重第二次处理推荐列表
  */
-public class thirdSortMainThreshold {
+public class ABkthirdSortMainThreshold {
     private static List<String> movieKind;
     private static Integer N = 0;
     private static Integer thresold = 0;

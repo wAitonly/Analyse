@@ -6,7 +6,7 @@ import java.io.*;
 import java.sql.SQLException;
 import java.util.*;
 
-public class againSortMainKmeans {
+public class againSortMainKmeans10 {
 
     private static Map<Integer,List<Integer>> KindMovieMap;
     private static Map<Integer,Integer> movieKindMap;
@@ -14,8 +14,8 @@ public class againSortMainKmeans {
     private static InfoGetUtil util = new InfoGetUtil();
     static {
         try {
-            KindMovieMap = getKindMovieByReadFile(5);
-            movieKindMap = getMovieKindByReadFile(5);
+            KindMovieMap = getKindMovieByReadFile(10);
+            movieKindMap = getMovieKindByReadFile(10);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -26,7 +26,7 @@ public class againSortMainKmeans {
 
     public static void main(String[] args) throws SQLException, IOException {
         int N;
-        for(int i = 4; i <= 5; i++){
+        for(int i = 1; i <= 5; i++){
             N = (i -1)*5 + 10;
             actionAfterSort(N);
         }
@@ -81,13 +81,13 @@ public class againSortMainKmeans {
     private static void actionBeforeSort() throws IOException, SQLException {
         String testStr = new InfoGetUtil().selectMovieKindByMovieId(2);
         System.out.println(testStr);
-        for(int i = 1; i <= 4;i ++) {
+        for(int i = 1; i <= 1;i ++) {
             int N = 5 * i;
             //读排序前
             Map<Integer, List<Integer>> recommentMap = readFile(N);
             //将结果输出到文件
             StringBuffer str = new StringBuffer();
-            FileWriter fw = new FileWriter("D:\\resultThirdSortTop"+N+".txt", true);
+            FileWriter fw = new FileWriter("D:\\OldRecommentAlgorithmWithoutAverage\\1M\\unsort\\resultThirdSortTop"+N+".txt", true);
             Set set = recommentMap.entrySet();
             Iterator iter = set.iterator();
             while (iter.hasNext()) {

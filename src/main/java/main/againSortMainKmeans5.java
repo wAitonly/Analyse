@@ -6,42 +6,32 @@ import java.io.*;
 import java.sql.SQLException;
 import java.util.*;
 
-public class againSortMain {
+public class againSortMainKmeans5 {
 
-    private static List<String> movieKind;
+    private static Map<Integer,List<Integer>> KindMovieMap;
+    private static Map<Integer,Integer> movieKindMap;
+    private static List<Integer> movieKind;
     private static InfoGetUtil util = new InfoGetUtil();
     static {
-        //静态获取数据库连接
+        try {
+            KindMovieMap = getKindMovieByReadFile(5);
+            movieKindMap = getMovieKindByReadFile(5);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         //初始化movieKind
-        movieKind = new ArrayList<>();
-        movieKind.add("Action");
-        movieKind.add("Adventure");
-        movieKind.add("Animation");
-        movieKind.add("Children's");
-        movieKind.add("Comedy");
-        movieKind.add("Crime");
-        movieKind.add("Documentary");
-        movieKind.add("Drama");
-        movieKind.add("Fantasy");
-        movieKind.add("Film-Noir");
-        movieKind.add("Horror");
-        movieKind.add("Musical");
-        movieKind.add("Mystery");
-        movieKind.add("Romance");
-        movieKind.add("Sci-Fi");
-        movieKind.add("Thriller");
-        movieKind.add("War");
-        movieKind.add("Western");
+        Set<Integer> keySet = KindMovieMap.keySet();
+        movieKind = new ArrayList<>(keySet);
     }
 
     public static void main(String[] args) throws SQLException, IOException {
-        int N;
-        for(int i = 1; i <= 5; i++){
-            N = (i -1)*5 + 10;
-            actionAfterSort(N);
-        }
+        int N = 5;
+//        for(int i = 4; i <= 5; i++){
+//            N = (i -1)*5 + 10;
+//            actionAfterSort(N);
+//        }
 
-        //actionBeforeSort();
+        actionBeforeSort();
     }
 
 
@@ -63,7 +53,6 @@ public class againSortMain {
             tempEntry = iterator.next();
             //该用户id
             tempUserId = tempEntry.getKey();
-            //拿到该用户的19个大类C分类情况
             //该用户的推荐列表,目的给它重排序后塞回map
             tempRecommentList = tempEntry.getValue();
             //重排序后
@@ -92,13 +81,13 @@ public class againSortMain {
     private static void actionBeforeSort() throws IOException, SQLException {
         String testStr = new InfoGetUtil().selectMovieKindByMovieId(2);
         System.out.println(testStr);
-        for(int i = 1; i <= 4;i ++) {
+        for(int i = 1; i <= 1;i ++) {
             int N = 5 * i;
             //读排序前
             Map<Integer, List<Integer>> recommentMap = readFile(N);
             //将结果输出到文件
             StringBuffer str = new StringBuffer();
-            FileWriter fw = new FileWriter("D:\\resultThirdSortTop"+N+".txt", true);
+            FileWriter fw = new FileWriter("D:\\OldRecommentAlgorithmWithoutAverage\\1M\\unsort\\resultThirdSortTop"+N+".txt", true);
             Set set = recommentMap.entrySet();
             Iterator iter = set.iterator();
             while (iter.hasNext()) {
@@ -112,37 +101,37 @@ public class againSortMain {
     }
 
     /*
-     * 计算该用户对于19个大类的C分类情况
+     * 计算该用户对于K个聚类的C分类情况
      * C1=1 C2=2 C3=3
      * 形如
      * {K1:1,K2:2,K3:1,......}
      */
-    private static Map<String,Integer> splitKindByUserId(Integer userId) throws SQLException {
-        Map<String,Integer> userSplitKindC = new HashMap<>();
-        //查询出该用户评论过的电影的类型
-        List<String> movieKindList = util.selectMovieKindByUserIdBase(userId);
+    private static Map<Integer,Integer> splitKindByUserId(Integer userId) throws SQLException {
+        Map<Integer,Integer> userSplitKindC = new HashMap<>();
+        //查询出该用户评论过的电影
+        List<Integer> movieList = util.selectMoviesByUserIdBase(userId);
         //该用户评论过的总数
-        Integer userTotalMark = movieKindList.size();
+        Integer userTotalMark = movieList.size();
         Double userTotalMarkDouble = userTotalMark.doubleValue();
-        //遍历用户类型列表,分别计算出各类型被用户评论了多少次
-        Map<String,Integer> movieKindMarkCount = new HashMap<>();
+        //遍历用户电影列表和电影类型列表,分别计算出各类型被用户评论了多少次
+        Map<Integer,Integer> movieKindMarkCount = new HashMap<>();
         int count;
-        for(String kind : movieKind){
+        for(Integer kindId : movieKind){
             count = 0;
-            for(String kinds : movieKindList){
-                if(kinds.contains(kind)){
+            for(Integer movieId : movieList){
+                if(KindMovieMap.get(kindId).contains(movieId)){
                     count ++;
                 }
             }
-            movieKindMarkCount.put(kind,count);
+            movieKindMarkCount.put(kindId,count);
         }
-        //显示释放movieKindList占用内存
-        movieKindList = null;
+        //显示释放movieListt占用内存
+        movieList = null;
         //--------根据movieKindMarkCount计算各类型被该用户关注的概率
-        Map<String,Double> movieKindP = new HashMap<>();
-        Iterator<Map.Entry<String,Integer>> iterator = movieKindMarkCount.entrySet().iterator();
-        Map.Entry<String,Integer> tempEntry;
-        String tempKind;
+        Map<Integer,Double> movieKindP = new HashMap<>();
+        Iterator<Map.Entry<Integer,Integer>> iterator = movieKindMarkCount.entrySet().iterator();
+        Map.Entry<Integer,Integer> tempEntry;
+        Integer tempKind;
         Integer tempCount;
         while (iterator.hasNext()){
             tempEntry = iterator.next();
@@ -152,11 +141,11 @@ public class againSortMain {
         }
         //显示释放movieKindMarkCount占用内存
         movieKindMarkCount = null;
-        //--------利用movieKindP得到该用户对于19个大类的C分类情况
+        //--------利用movieKindP得到该用户对于K个聚类的C分类情况
         //拿到概率list
-        Iterator<Map.Entry<String,Double>> iteratorP = movieKindP.entrySet().iterator();
+        Iterator<Map.Entry<Integer,Double>> iteratorP = movieKindP.entrySet().iterator();
         List<Double> Plist = new ArrayList<>();
-        Map.Entry<String,Double> tempEntryP;
+        Map.Entry<Integer,Double> tempEntryP;
         Double tempP;
         //拿到概率之和，计算平均值，标准差用
         Double sum = 0.0;
@@ -180,10 +169,10 @@ public class againSortMain {
         Double standardDeviation = Math.sqrt(total/size);
         //利用每个类的关注概率，平均值和标准差分C类
         //再遍历一遍各类型被该用户关注的概率Map
-        Iterator<Map.Entry<String,Double>> iteratorPForResult = movieKindP.entrySet().iterator();
-        Map.Entry<String,Double> tempEntryPForResult;
+        Iterator<Map.Entry<Integer,Double>> iteratorPForResult = movieKindP.entrySet().iterator();
+        Map.Entry<Integer,Double> tempEntryPForResult;
         Double tempPForResult;
-        String tempKindName;
+        Integer tempKindName;
         Double tempC;
         //测试集合
         while (iteratorPForResult.hasNext()){
@@ -210,10 +199,10 @@ public class againSortMain {
      * 分C类根据关注度排序
      */
     private static List<Integer> order(List<Integer> recommentList,Integer userId) throws SQLException {
-        //拿到该用户对于19个大类的C分类情况
-        Map<String,Integer> splitKindMap = splitKindByUserId(userId);
+        //拿到该用户对于K个聚类的C分类情况
+        Map<Integer,Integer> splitKindMap = splitKindByUserId(userId);
         //遍历推荐电影id列表
-        String tempMovieKind;
+        Integer tempMovieKind;
         Integer tempC;
         Integer tempRage;
         //遍历推荐列表，被初始排序下的每个推荐标记排序前位置，同时几下每部电影的C类和流行度
@@ -227,20 +216,24 @@ public class againSortMain {
             startSort.put(movieId,sort);
             sort ++;
             //查询该电影类型
-            tempMovieKind = util.selectMovieKindByMovieId(movieId);
+            tempMovieKind = movieKindMap.get(movieId);
             //获取该电影的C型号
             tempC = splitKindMap.get(tempMovieKind);
-            //根据C类别分类
-            switch (tempC){
-                case 1:
-                    C1List.add(movieId);
-                    break;
-                case 2:
-                    C2List.add(movieId);
-                    break;
-                case 3:
-                    C3List.add(movieId);
-                    break;
+            if(null == tempC){
+                C3List.add(movieId);
+            }else {
+                //根据C类别分类
+                switch (tempC){
+                    case 1:
+                        C1List.add(movieId);
+                        break;
+                    case 2:
+                        C2List.add(movieId);
+                        break;
+                    case 3:
+                        C3List.add(movieId);
+                        break;
+                }
             }
             //获取该电影的流行度，即该电影被多少人评分过
             tempRage =util.selectRageByMovieIdBase(movieId);
@@ -261,8 +254,8 @@ public class againSortMain {
         Integer tempMovieIdb;
         //----新start----
         Integer tempindex;
-        String tempKinda;
-        String tempKindb;
+        Integer tempKinda;
+        Integer tempKindb;
         //----新end----
         for(int i = 0 ; i < sizeC1-1 ; i ++){
             for(int j = 0 ; j < sizeC1-1-i ; j ++){
@@ -270,17 +263,17 @@ public class againSortMain {
                 tempMovieIdb = C1List.get(j+1);
                 //----新start----
                 tempindex = j+1;
-                tempKinda = util.selectMovieKindByMovieId(tempMovieIda);
+                tempKinda = movieKindMap.get(tempMovieIda);
                 for(int a = j+1;a < sizeC1-1-i;a++){
-                    tempKindb = util.selectMovieKindByMovieId(C1List.get(a));
-                    if(tempKinda.equals(tempKindb)){
+                    tempKindb = movieKindMap.get(C1List.get(a));
+                    if(tempKinda == tempKindb){
                         tempMovieIdb = C1List.get(a);
                         tempindex = a;
                         break;
                     }
                 }
                 //遍历之后仍然找不到同类型的电影,即tempindex没变
-                if(tempindex == j+1 && !(util.selectMovieKindByMovieId(tempMovieIda).equals(util.selectMovieKindByMovieId(C1List.get(j+1))))){
+                if(tempindex == j+1 && !(movieKindMap.get(tempMovieIda) == movieKindMap.get(C1List.get(j+1)))){
                     continue;
                 }
                 //----新end----
@@ -313,8 +306,8 @@ public class againSortMain {
         Integer tempMovieIdbC3;
         //----新start----
         Integer tempindexC3;
-        String tempKindaC3;
-        String tempKindbC3;
+        Integer tempKindaC3;
+        Integer tempKindbC3;
         //----新end----
         for(int i = 0 ; i < sizeC3-1 ; i ++){
             for(int j = 0 ; j < sizeC3-1-i ; j ++){
@@ -322,17 +315,17 @@ public class againSortMain {
                 tempMovieIdbC3 = C3List.get(j+1);
                 //----新start----
                 tempindexC3 = j+1;
-                tempKindaC3 = util.selectMovieKindByMovieId(tempMovieIdaC3);
+                tempKindaC3 = movieKindMap.get(tempMovieIdaC3);
                 for(int a = j+1;a < sizeC3-1-i;a++){
-                    tempKindbC3 = util.selectMovieKindByMovieId(C3List.get(a));
-                    if(tempKindaC3.equals(tempKindbC3)){
+                    tempKindbC3 = movieKindMap.get(C3List.get(a));
+                    if(tempKindaC3 == tempKindbC3){
                         tempMovieIdbC3 = C3List.get(a);
                         tempindexC3 = a;
                         break;
                     }
                 }
                 //遍历之后仍然找不到同类型的电影,即tempindex没变
-                if(tempindexC3 == j+1 && !(util.selectMovieKindByMovieId(tempMovieIdaC3).equals(util.selectMovieKindByMovieId(C3List.get(j+1))))){
+                if(tempindexC3 == j+1 && !(movieKindMap.get(tempMovieIdaC3) == movieKindMap.get(C3List.get(j+1)))){
                     continue;
                 }
                 //----新end----
@@ -436,4 +429,51 @@ public class againSortMain {
         return  resultMap;
     }
 
+
+    /**
+     * 通过读文件给电影分类
+     * @return
+     */
+    public static Map<Integer,List<Integer>> getKindMovieByReadFile(Integer K) throws IOException {
+        Map<Integer, List<Integer>> kindMovieMap = new HashMap<>();
+        BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream("D:\\Kmeans\\Kmeans"+K+".txt")));
+        String data;
+        Integer tempMovieId = -1;
+        Integer tempKindId = -1;
+        while((data = br.readLine())!=null){
+            data = data.trim().replace(" ","");
+            if(data.startsWith("聚簇ID")){
+                tempKindId = Integer.valueOf(data.substring(data.indexOf("=")+1,data.indexOf("，")).trim());
+                kindMovieMap.put(tempKindId,new ArrayList<>());
+            }
+            if(data.startsWith("点ID")){
+                tempMovieId = Integer.valueOf(data.substring(data.indexOf("=")+1,data.indexOf("，")).trim());
+                kindMovieMap.get(tempKindId).add(tempMovieId);
+            }
+        }
+        return kindMovieMap;
+    }
+
+    /**
+     * 通过读文件给电影分类
+     * @return
+     */
+    public static Map<Integer,Integer> getMovieKindByReadFile(Integer K) throws IOException {
+        Map<Integer, Integer> movieKindMap = new HashMap<>();
+        BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream("D:\\Kmeans\\Kmeans"+K+".txt")));
+        String data;
+        Integer tempMovieId = -1;
+        Integer tempKindId = -1;
+        while((data = br.readLine())!=null){
+            data = data.trim().replace(" ","");
+            if(data.startsWith("聚簇ID")){
+                tempKindId = Integer.valueOf(data.substring(data.indexOf("=")+1,data.indexOf("，")).trim());
+            }
+            if(data.startsWith("点ID")){
+                tempMovieId = Integer.valueOf(data.substring(data.indexOf("=")+1,data.indexOf("，")).trim());
+                movieKindMap.put(tempMovieId,tempKindId);
+            }
+        }
+        return movieKindMap;
+    }
 }

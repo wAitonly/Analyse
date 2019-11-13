@@ -11,9 +11,9 @@ public class main {
     public static void main(String[] args) throws IOException, SQLException {
         OldRecommentAlgorithmList oldRecommentAlgorithmList = new OldRecommentAlgorithmList();
         //拿到用户之间综合相似度的集合
-        Map<Integer, Map<Integer,Double>> userSimMap = oldRecommentAlgorithmList.buildUserUserSimTable();
+        //Map<Integer, Map<Integer,Double>> userSimMap = oldRecommentAlgorithmList.buildUserUserSimTable();
         //读文件拿综合相似度的集合
-        //Map<Integer, Map<Integer,Double>> userSimMap = readFileGetSimMap();
+        Map<Integer, Map<Integer,Double>> userSimMap = readFileGetSimMap();
         //拿到推荐列表
         //oldRecommentAlgorithm.buildRecommendList(userSimMap,50);
         //int movieNumber;
@@ -21,7 +21,7 @@ public class main {
 //            movieNumber = i * 5 *3;
 //            oldRecommentAlgorithm.buildRecommendList(userSimMap,movieNumber);
 //        }
-          for(int i = 2; i <= 6; i++){
+          for(int i = 1; i <= 1; i++){
               oldRecommentAlgorithmList.buildRecommendList(userSimMap,i * 5);
         }
     }

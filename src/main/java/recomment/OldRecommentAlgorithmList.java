@@ -309,7 +309,7 @@ public class OldRecommentAlgorithmList {
         System.out.println("-------开始构建top"+movieNumber+"候选列表");
         //直接打印到文件
         StringBuffer stringBuffer = new StringBuffer();
-        FileWriter fileWriter = new FileWriter("D:\\OldRecommentAlgorithmWithoutAverage\\100K\\candidacyTop"+movieNumber+".txt", true);
+        FileWriter fileWriter = new FileWriter("D:\\OldRecommentAlgorithmWithoutAverage\\1M\\candidacyTop"+movieNumber+".txt", true);
         List<Integer> tempMovieList;
         //获取每个用户的前N和最相似用户
         Map<Integer,List<Integer>> simUserMap = buildsimUserList(userSimMap);
