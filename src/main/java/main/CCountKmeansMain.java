@@ -8,7 +8,7 @@ import java.nio.channels.FileChannel;
 import java.sql.SQLException;
 import java.util.*;
 
-public class CCountMain {
+public class CCountKmeansMain {
     private static Map<Integer,Integer> movieKindMap;
     private static Map<Integer,List<Integer>> KindMovieMap;
     private static List<Integer> movieKind;
