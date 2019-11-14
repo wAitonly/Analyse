@@ -44,12 +44,11 @@ public class quotaMain {
         System.out.println(testStr);
         int tempFileN;
         for(int threshold = 1; threshold < 5; threshold++){
-            for(int i = 1; i <= 1;i ++){
+            for(int i = 3; i <= 3;i ++){
 //                if(threshold == 38 && i < 3){
 //                    continue;
 //                }
                 tempFileN = (i -1)*5 + 10;
-                //tempFileN = 5;
                 N = 5;
                 //讀取推薦列表
                 Map<Integer, List<Integer>> recommentMap = readFile(threshold,N,tempFileN);

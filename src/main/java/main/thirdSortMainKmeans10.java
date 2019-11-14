@@ -33,7 +33,7 @@ public class thirdSortMainKmeans10 {
     public static void main(String[] args) throws IOException, SQLException {
         //读取文件拿到各用户重排序后的推荐列表
         int fileN;
-        for(int i = 1; i <= 1;i ++){
+        for(int i = 1; i <= 5;i ++){
             N = 5;
             fileN = (i -1)*5 + 10;
             for(thresold = 1; thresold < 5; thresold++){
@@ -138,6 +138,9 @@ public class thirdSortMainKmeans10 {
             n ++;
             //查询该电影类型
             tempMovieKind = movieKindMap.get(movieId);
+            if(tempMovieKind == null){
+                continue;
+            }
             //根据C类别分类
             switch (tempMovieKind){
                 case 0:
@@ -193,7 +196,7 @@ public class thirdSortMainKmeans10 {
                     CWeight.set(i,CWeight.get(i)-1);
                 }
             }
-            if(Collections.max(CWeight) - Collections.min(CWeight) > 1){
+            if(Collections.max(CWeight) - Collections.min(CWeight) == 1){
                 break;
             }
         }
@@ -223,36 +226,70 @@ public class thirdSortMainKmeans10 {
         for(Integer movieId : moviesIdList){
             //查询该电影类型
             tempMovieKind = movieKindMap.get(movieId);
-            if(tempMovieKind == 0 && C1 < CWeight.get(0)){
-                resultList.add(movieId);
-                C1 ++ ;
-            }else if(tempMovieKind == 1 && C2 < CWeight.get(1)){
-                resultList.add(movieId);
-                C2 ++ ;
-            }else if(tempMovieKind == 2 && C3 < CWeight.get(2)){
-                resultList.add(movieId);
-                C3 ++ ;
-            }else if(tempMovieKind == 3 && C4 < CWeight.get(3)){
-                resultList.add(movieId);
-                C4 ++ ;
-            }else if(tempMovieKind == 4 && C5 < CWeight.get(4)){
-                resultList.add(movieId);
-                C5 ++ ;
-            }else if(tempMovieKind == 5 && C6 < CWeight.get(5)){
-                resultList.add(movieId);
-                C6 ++ ;
-            }else if(tempMovieKind == 6 && C7 < CWeight.get(6)){
-                resultList.add(movieId);
-                C7 ++ ;
-            }else if(tempMovieKind == 7 && C8 < CWeight.get(7)){
-                resultList.add(movieId);
-                C8 ++ ;
-            }else if(tempMovieKind == 8 && C9 < CWeight.get(8)){
-                resultList.add(movieId);
-                C9 ++ ;
-            }else if(tempMovieKind == 9 && C10 < CWeight.get(9)){
-                resultList.add(movieId);
-                C10 ++ ;
+            if(tempMovieKind == null){
+                continue;
+            }
+            switch (tempMovieKind){
+                case 0:
+                    if(C1 < CWeight.get(0)){
+                        resultList.add(movieId);
+                        C1 ++ ;
+                    }
+                    break;
+                case 1:
+                    if(C2 < CWeight.get(1)){
+                        resultList.add(movieId);
+                        C2 ++ ;
+                    }
+                    break;
+                case 2:
+                    if(C3 < CWeight.get(2)){
+                        resultList.add(movieId);
+                        C3 ++ ;
+                    }
+                    break;
+                case 3:
+                    if(C4 < CWeight.get(3)){
+                        resultList.add(movieId);
+                        C4 ++ ;
+                    }
+                    break;
+                case 4:
+                    if(C5 < CWeight.get(4)){
+                        resultList.add(movieId);
+                        C5 ++ ;
+                    }
+                    break;
+                case 5:
+                    if(C6 < CWeight.get(5)){
+                        resultList.add(movieId);
+                        C6 ++ ;
+                    }
+                    break;
+                case 6:
+                    if(C7 < CWeight.get(6)){
+                        resultList.add(movieId);
+                        C7 ++ ;
+                    }
+                    break;
+                case 7:
+                    if(C8 < CWeight.get(7)){
+                        resultList.add(movieId);
+                        C8 ++ ;
+                    }
+                    break;
+                case 8:
+                    if(C9 < CWeight.get(8)){
+                        resultList.add(movieId);
+                        C9 ++ ;
+                    }
+                    break;
+                case 9:
+                    if(C10 < CWeight.get(9)){
+                        resultList.add(movieId);
+                        C10 ++ ;
+                    }
+                    break;
             }
         }
         return resultList;

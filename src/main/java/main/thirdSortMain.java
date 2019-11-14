@@ -40,8 +40,8 @@ public class thirdSortMain {
     public static void main(String[] args) throws IOException, SQLException {
         //读取文件拿到各用户重排序后的推荐列表
 
-        for(int i = 1; i < 5;i ++){
-            N = 5 * i;
+        for(int i = 1; i < 4;i ++){
+            N = 5;
             int fileN = (i -1)*5 + 10;
             for(thresold = 1; thresold < 5; thresold++){
                 Map<Integer, List<Integer>> resultMap = readFile(fileN);
@@ -63,7 +63,7 @@ public class thirdSortMain {
                 //输出到文件
                 //将结果输出到文件
                 StringBuffer str = new StringBuffer();
-                FileWriter fw = new FileWriter("D:\\OldRecommentAlgorithmWithoutAverage\\100K\\newsort\\resultThirdSortTop"+N+".txt", true);
+                FileWriter fw = new FileWriter("D:\\OldRecommentAlgorithmWithoutAverage\\1M\\sort\\resultThirdSortTop"+N+"Threshold"+thresold+"Len"+fileN+".txt", true);
                 Set set = afterSelectMap.entrySet();
                 Iterator iter = set.iterator();
                 while(iter.hasNext()){
@@ -89,7 +89,7 @@ public class thirdSortMain {
      */
     private static Map<Integer, List<Integer>> readFile(Integer N) throws IOException{
         Map<Integer, List<Integer>> resultMap = new HashMap<>();
-        BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream("D:\\OldRecommentAlgorithmWithoutAverage\\100K\\newsort\\resultAgainSortTop"+N+".txt")));
+        BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream("D:\\OldRecommentAlgorithmWithoutAverage\\1M\\sort\\resultAgainSortTop"+N+".txt")));
         String data;
         Integer tempUserId;
         String tempMovieIds;
@@ -228,7 +228,7 @@ public class thirdSortMain {
                     CWeight.set(i,CWeight.get(i)-1);
                 }
             }
-            if(Collections.max(CWeight) - Collections.min(CWeight) > 1){
+            if(Collections.max(CWeight) - Collections.min(CWeight) == 1){
                 break;
             }
         }
@@ -250,60 +250,115 @@ public class thirdSortMain {
         for(Integer movieId : moviesIdList){
             //查询该电影类型
             tempMovieKind = util.selectMovieKindByMovieId(movieId);
-            if(tempMovieKind.equals("Action") && C1 < CWeight.get(0)){
-                resultList.add(movieId);
-                C1 ++ ;
-            }else if(tempMovieKind.equals("Adventure") && C2 < CWeight.get(1)){
-                resultList.add(movieId);
-                C2 ++ ;
-            }else if(tempMovieKind.equals("Animation") && C3 < CWeight.get(2)){
-                resultList.add(movieId);
-                C3 ++ ;
-            }else if(tempMovieKind.equals("Children's") && C4 < CWeight.get(4)){
-                resultList.add(movieId);
-                C4 ++ ;
-            }else if(tempMovieKind.equals("Comedy") && C5 < CWeight.get(5)){
-                resultList.add(movieId);
-                C5 ++ ;
-            }else if(tempMovieKind.equals("Crime") && C6 < CWeight.get(6)){
-                resultList.add(movieId);
-                C6 ++ ;
-            }else if(tempMovieKind.equals("Documentary") && C7 < CWeight.get(7)){
-                resultList.add(movieId);
-                C7 ++ ;
-            }else if(tempMovieKind.equals("Drama") && C8 < CWeight.get(8)){
-                resultList.add(movieId);
-                C8 ++ ;
-            }else if(tempMovieKind.equals("Fantasy") && C9 < CWeight.get(9)){
-                resultList.add(movieId);
-                C9 ++ ;
-            }else if(tempMovieKind.equals("Film-Noir") && C10 < CWeight.get(10)){
-                resultList.add(movieId);
-                C10 ++ ;
-            }else if(tempMovieKind.equals("Horror") && C11 < CWeight.get(11)){
-                resultList.add(movieId);
-                C11 ++ ;
-            }else if(tempMovieKind.equals("Musical") && C12 < CWeight.get(12)){
-                resultList.add(movieId);
-                C12 ++ ;
-            }else if(tempMovieKind.equals("Mystery") && C13 < CWeight.get(13)){
-                resultList.add(movieId);
-                C13 ++ ;
-            }else if(tempMovieKind.equals("Romance") && C14 < CWeight.get(14)){
-                resultList.add(movieId);
-                C14 ++ ;
-            }else if(tempMovieKind.equals("Sci-Fi") && C15 < CWeight.get(15)){
-                resultList.add(movieId);
-                C15 ++ ;
-            }else if(tempMovieKind.equals("Thriller") && C16 < CWeight.get(16)){
-                resultList.add(movieId);
-                C16 ++ ;
-            }else if(tempMovieKind.equals("War") && C17 < CWeight.get(17)){
-                resultList.add(movieId);
-                C17 ++ ;
-            }else if(tempMovieKind.equals("Western") && C18 < CWeight.get(18)){
-                resultList.add(movieId);
-                C18 ++ ;
+            switch (tempMovieKind){
+                case "Action":
+                    if(C1 < CWeight.get(0)){
+                        resultList.add(movieId);
+                        C1 ++ ;
+                    }
+                    break;
+                case "Adventure":
+                    if(C2 < CWeight.get(1)){
+                        resultList.add(movieId);
+                        C2 ++ ;
+                    }
+                    break;
+                case "Animation":
+                    if(C3 < CWeight.get(2)){
+                        resultList.add(movieId);
+                        C3 ++ ;
+                    }
+                    break;
+                case "Children's":
+                    if(C4 < CWeight.get(3)){
+                        resultList.add(movieId);
+                        C4 ++ ;
+                    }
+                    break;
+                case "Comedy":
+                    if(C5 < CWeight.get(4)){
+                        resultList.add(movieId);
+                        C5 ++ ;
+                    }
+                    break;
+                case "Crime":
+                    if(C6 < CWeight.get(5)){
+                        resultList.add(movieId);
+                        C6 ++ ;
+                    }
+                    break;
+                case "Documentary":
+                    if(C7 < CWeight.get(6)){
+                        resultList.add(movieId);
+                        C7 ++ ;
+                    }
+                    break;
+                case "Drama":
+                    if(C8 < CWeight.get(7)){
+                        resultList.add(movieId);
+                        C8 ++ ;
+                    }
+                    break;
+                case "Fantasy":
+                    if(C9 < CWeight.get(8)){
+                        resultList.add(movieId);
+                        C9 ++ ;
+                    }
+                    break;
+                case "Film-Noir":
+                    if(C10 < CWeight.get(9)){
+                        resultList.add(movieId);
+                        C10 ++ ;
+                    }
+                    break;
+                case "Horror":
+                    if(C11 < CWeight.get(10)){
+                        resultList.add(movieId);
+                        C11 ++ ;
+                    }
+                    break;
+                case "Musical":
+                    if(C12 < CWeight.get(11)){
+                        resultList.add(movieId);
+                        C12 ++ ;
+                    }
+                    break;
+                case "Mystery":
+                    if(C13 < CWeight.get(12)){
+                        resultList.add(movieId);
+                        C13 ++ ;
+                    }
+                    break;
+                case "Romance":
+                    if(C14 < CWeight.get(13)){
+                        resultList.add(movieId);
+                        C14 ++ ;
+                    }
+                    break;
+                case "Sci-Fi":
+                    if(C15 < CWeight.get(14)){
+                        resultList.add(movieId);
+                        C15 ++ ;
+                    }
+                    break;
+                case "Thriller":
+                    if(C16 < CWeight.get(15)){
+                        resultList.add(movieId);
+                        C16 ++ ;
+                    }
+                    break;
+                case "War":
+                    if(C17 < CWeight.get(16)){
+                        resultList.add(movieId);
+                        C17 ++ ;
+                    }
+                    break;
+                case "Western":
+                    if(C18 < CWeight.get(17)){
+                        resultList.add(movieId);
+                        C18 ++ ;
+                    }
+                    break;
             }
         }
         return resultList;
