@@ -9,20 +9,17 @@ import java.util.Map;
 
 public class main {
     public static void main(String[] args) throws IOException, SQLException {
-        OldRecommentAlgorithmList oldRecommentAlgorithmList = new OldRecommentAlgorithmList();
+        OldRecommentAlgorithmNoThird oldRecommentAlgorithmNoThird = new OldRecommentAlgorithmNoThird();
         //拿到用户之间综合相似度的集合
         //Map<Integer, Map<Integer,Double>> userSimMap = oldRecommentAlgorithmList.buildUserUserSimTable();
         //读文件拿综合相似度的集合
         Map<Integer, Map<Integer,Double>> userSimMap = readFileGetSimMap();
         //拿到推荐列表
         //oldRecommentAlgorithm.buildRecommendList(userSimMap,50);
-        //int movieNumber;
-//        for(int i = 1; i <= 5; i++){
-//            movieNumber = i * 5 *3;
-//            oldRecommentAlgorithm.buildRecommendList(userSimMap,movieNumber);
-//        }
-          for(int i = 1; i <= 1; i++){
-              oldRecommentAlgorithmList.buildRecommendList(userSimMap,i * 5);
+        int movieNumber;
+        for(int i = 1; i <= 5; i++){
+            movieNumber = (i -1)*5 + 10;
+            oldRecommentAlgorithmNoThird.buildRecommendList(userSimMap,movieNumber);
         }
     }
 

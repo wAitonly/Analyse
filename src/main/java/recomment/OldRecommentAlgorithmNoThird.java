@@ -11,18 +11,18 @@ import java.nio.channels.FileChannel;
 import java.sql.SQLException;
 import java.util.*;
 
-import static java.util.stream.Collectors.toList;
-
 /**
  * 核心算法
  * zhaobenquan
  */
-public class OldRecommentAlgorithm {
+public class OldRecommentAlgorithmNoThird {
 
     private static Map<Integer,Map<Integer,Integer>> overAllMap;
     private static Comparator<Map.Entry<Integer,Double>> valueComparator;
     private static  Map<Integer, List<Integer>> userMovieTable;
     private static Integer simNumber = 50;
+    private static double Tr = 3.8;
+    private static double Th = 3.2;
     //拿到用户影评信息
     private static List<Ratings> ratingsList;
 
@@ -311,8 +311,10 @@ public class OldRecommentAlgorithm {
         System.out.println("-------开始构建top"+movieNumber+"候选列表");
         //直接打印到文件
         StringBuffer stringBuffer = new StringBuffer();
-        FileWriter fileWriter = new FileWriter("D:\\OldRecommentAlgorithmWithoutAverage\\1M\\candidacyTop"+movieNumber+".txt", true);
-        List<Integer> tempMovieList;
+        FileWriter fileWriter = new FileWriter("D:\\OldRecommentAlgorithmWithoutAverage\\1M\\noThirdCandidacyTop"+movieNumber+".txt", true);
+        List<Integer> tempMovieListBefore;
+        List<Integer> tempMovieListFollow;
+        List<Integer> tempMovieListAbandon;
         //获取每个用户的前N和最相似用户
         Map<Integer,List<Integer>> simUserMap = buildsimUserList(userSimMap);
         Iterator<Map.Entry<Integer,List<Integer>>> iteratorMap = simUserMap.entrySet().iterator();
@@ -395,18 +397,31 @@ public class OldRecommentAlgorithm {
             //内层遍历寻找前N最相似的用户
             iteratorInn = sortList.iterator();
             //最终的推荐电影
-            tempMovieList = new ArrayList<>();
+            tempMovieListBefore = new ArrayList<>();
+            tempMovieListFollow = new ArrayList<>();
+            tempMovieListAbandon = new ArrayList<>();
             while (iteratorInn.hasNext()){
                 tempEntryInn = iteratorInn.next();
-                if(tempMovieList.size() < movieNumber){
-                    tempMovieList.add(tempEntryInn.getKey());
+                if((tempMovieListBefore.size()+tempMovieListFollow.size()+tempMovieListAbandon.size()) < movieNumber){
+                    if(tempEntryInn.getValue() > Tr){
+                        //流行度倒排序部分
+                        tempMovieListBefore.add(tempEntryInn.getKey());
+                    }else if(tempEntryInn.getValue() > Th){
+                        //原顺序不变
+                        tempMovieListFollow.add(tempEntryInn.getKey());
+                    }else {
+                        //弃用部分
+                        tempMovieListAbandon.add(tempEntryInn.getKey());
+                    }
                 }
             }
             tempResultRecommentMovieMap = null;
             sortList = null;
             //直接打印
-            stringBuffer.append(tempUserId+":"+tempMovieList.toString()+"\n");
-            tempMovieList = null;
+            stringBuffer.append(tempUserId+":before:"+tempMovieListBefore.toString()+";follow:"+tempMovieListFollow.toString()+";abandon:"+tempMovieListAbandon.toString()+"\n");
+            tempMovieListBefore = null;
+            tempMovieListFollow = null;
+            tempMovieListAbandon = null;
             i++;
             System.out.print("\r");
             System.out.print(i);

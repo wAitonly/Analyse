@@ -40,9 +40,10 @@ public class thirdSortMain {
     public static void main(String[] args) throws IOException, SQLException {
         //读取文件拿到各用户重排序后的推荐列表
 
-        for(int i = 1; i < 4;i ++){
+        for(int i = 1; i <= 5;i ++){
             N = 5;
             int fileN = (i -1)*5 + 10;
+            Map<Integer, List<Integer>> candicacyMap = readCandicacy(fileN);
             for(thresold = 1; thresold < 5; thresold++){
                 Map<Integer, List<Integer>> resultMap = readFile(fileN);
                 Iterator<Map.Entry<Integer, List<Integer>>> iterator = resultMap.entrySet().iterator();
@@ -52,13 +53,16 @@ public class thirdSortMain {
                 List<Integer> tempSelectMoviesIdList;
                 //遍历拿到权重选择后的推荐列表
                 Map<Integer, List<Integer>> afterSelectMap = new HashMap<>();
+                int size = resultMap.size();
+                int count = 1;
                 while (iterator.hasNext()){
                     tempEntry = iterator.next();
                     tempUserId = tempEntry.getKey();
                     tempMoviesIdList = tempEntry.getValue();
                     //根据用户id以及其推荐列表还有阈值重新权重选择推荐列表
-                    tempSelectMoviesIdList = thirdSelectByUserIdAndList(tempUserId,tempMoviesIdList,thresold);
+                    tempSelectMoviesIdList = thirdSelectByUserIdAndList(tempUserId,tempMoviesIdList,thresold,candicacyMap.get(tempUserId));
                     afterSelectMap.put(tempUserId,tempSelectMoviesIdList);
+                    System.out.println("正在权重选择Top"+N+"Threshold"+thresold+"Len"+fileN+"推荐列表，共"+size+"用户的候选列表待选择，已完成"+(count++));
                 }
                 //输出到文件
                 //将结果输出到文件
@@ -121,7 +125,7 @@ public class thirdSortMain {
      * @param threshold
      * @return
      */
-    public static List<Integer> thirdSelectByUserIdAndList(Integer userId,List<Integer> moviesIdList,Integer threshold) throws SQLException {
+    public static List<Integer> thirdSelectByUserIdAndList(Integer userId,List<Integer> moviesIdList,Integer threshold,List<Integer> recList) throws SQLException {
         List<Integer> resultList = new ArrayList<>();
         //遍历推荐列表，计算出各C类的初始化权重,即各C类有多少个
         String tempMovieKind;
@@ -228,7 +232,7 @@ public class thirdSortMain {
                     CWeight.set(i,CWeight.get(i)-1);
                 }
             }
-            if(Collections.max(CWeight) - Collections.min(CWeight) == 1){
+            if(Collections.max(CWeight) - Collections.min(CWeight) <= threshold){
                 break;
             }
         }
@@ -361,10 +365,66 @@ public class thirdSortMain {
                     break;
             }
         }
+        //如果权重选择完后的推荐列表不足N个，取候选列表前几个补
+        int resultSize = resultList.size();
+        if(resultSize < N){
+            for(Integer movieId : recList){
+                if(!resultList.contains(movieId)){
+                    resultList.add(movieId);
+                }
+                if(resultList.size() == N){
+                    break;
+                }
+            }
+        }
         return resultList;
 
     }
 
-
-
+    /**
+     * 读取原始候选列表
+     * @param N
+     * @return
+     * @throws IOException
+     * @throws SQLException
+     */
+    private static Map<Integer, List<Integer>> readCandicacy(Integer N) throws IOException, SQLException {
+        Map<Integer, List<Integer>> resultMap = new HashMap<>();
+        Map<Integer, List<String>> resultMapTemp = new HashMap<>();
+        BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream("D:\\OldRecommentAlgorithmWithoutAverage\\1M\\candidacyTop"+N+".txt")));
+        String data;
+        Integer tempUserId;
+        List<String> tempList;
+        while((data = br.readLine())!=null){
+            data.trim().replace(" ","");
+            tempUserId = Integer.valueOf(data.substring(0,data.indexOf(":")).trim());
+            tempList = Arrays.asList(data.substring(data.indexOf("[")+1,data.indexOf("]")).trim().split(","));
+            resultMapTemp.put(tempUserId,tempList);
+            //显示释放tempList占用内存
+            tempList = null;
+        }
+        //遍历resultMapTemp
+        Iterator<Map.Entry<Integer, List<String>>> iterator = resultMapTemp.entrySet().iterator();
+        Map.Entry<Integer, List<String>> tempEntry;
+        Integer tempUserIdResult;
+        List<String> tempMovieNameList;
+        List<Integer> tempMovieIdList;
+        while (iterator.hasNext()){
+            tempEntry = iterator.next();
+            tempUserIdResult = tempEntry.getKey();
+            tempMovieNameList = tempEntry.getValue();
+            //根据电影名称列表查询电影id列表
+            //tempMovieIdList = util.selectMovieIdByMovieName(tempMovieNameList);
+            tempMovieIdList = new ArrayList<>();
+            for(String str : tempMovieNameList){
+                tempMovieIdList.add(Integer.valueOf(str.trim()));
+            }
+            resultMap.put(tempUserIdResult,tempMovieIdList);
+        }
+        //显示释放resultMapTemp占用内存
+        resultMapTemp = null;
+        tempMovieNameList = null;
+        tempMovieIdList = null;
+        return  resultMap;
+    }
 }

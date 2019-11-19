@@ -26,7 +26,7 @@ public class againSortMainKmeans10 {
 
     public static void main(String[] args) throws SQLException, IOException {
         int N;
-        for(int i = 1; i <= 5; i++){
+        for(int i = 4; i <= 5; i++){
             N = (i -1)*5 + 10;
             actionAfterSort(N);
         }
@@ -380,22 +380,6 @@ public class againSortMainKmeans10 {
         String data;
         Integer tempUserId;
         List<String> tempList;
-//        while((data = br.readLine())!=null){
-//            data.trim().replace(" ","");
-//            if(data.contains("rating")){
-//                tempUserId = Integer.valueOf(data.substring(data.indexOf("user:")+5,data.indexOf("film:")-3).trim());
-//                tempMovieName = data.substring(data.indexOf("film:")+5,data.indexOf("rating:")-3).trim();
-//                if(resultMapTemp.containsKey(tempUserId)){
-//                    resultMapTemp.get(tempUserId).add(tempMovieName);
-//                }else {
-//                    tempList = new ArrayList<>();
-//                    tempList.add(tempMovieName);
-//                    resultMapTemp.put(tempUserId,tempList);
-//                }
-//            }
-//            //显示释放tempList占用内存
-//            tempList = null;
-//        }
         while((data = br.readLine())!=null){
             data.trim().replace(" ","");
             tempUserId = Integer.valueOf(data.substring(0,data.indexOf(":")).trim());
