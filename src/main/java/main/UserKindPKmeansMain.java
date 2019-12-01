@@ -55,6 +55,9 @@ public class UserKindPKmeansMain {
         int num = 1;
         for(Integer uesrID : userIdList){
             System.out.println("共"+size+"，正在进行"+(num++));
+            if(uesrID != 643){
+                continue;
+            }
             //画sse折线图
             tempDateset = new DefaultCategoryDataset();
             tempPCount = new TreeMap<>();

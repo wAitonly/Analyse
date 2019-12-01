@@ -8,8 +8,8 @@ import java.util.List;
 import java.util.Map;
 
 public class main {
-    public static void main(String[] args) throws IOException, SQLException {
-        OldRecommentAlgorithmNoThird oldRecommentAlgorithmNoThird = new OldRecommentAlgorithmNoThird();
+    public static void main(String[] args) throws IOException{
+        OldRecommentAlgorithmList oldRecommentAlgorithmList = new OldRecommentAlgorithmList();
         //拿到用户之间综合相似度的集合
         //Map<Integer, Map<Integer,Double>> userSimMap = oldRecommentAlgorithmList.buildUserUserSimTable();
         //读文件拿综合相似度的集合
@@ -17,9 +17,9 @@ public class main {
         //拿到推荐列表
         //oldRecommentAlgorithm.buildRecommendList(userSimMap,50);
         int movieNumber;
-        for(int i = 1; i <= 5; i++){
-            movieNumber = (i -1)*5 + 10;
-            oldRecommentAlgorithmNoThird.buildRecommendList(userSimMap,movieNumber);
+        for(int i = 1; i <= 4; i++){
+            movieNumber = ((i -1)*5 + 10)*3;
+            oldRecommentAlgorithmList.buildRecommendList(userSimMap,movieNumber);
         }
     }
 

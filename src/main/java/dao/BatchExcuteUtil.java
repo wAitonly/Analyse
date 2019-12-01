@@ -34,10 +34,16 @@ public class BatchExcuteUtil {
     private static final String selectMoviesByUserId = "select MovieID from ratings where UserID = ";
 
     //查询电影根据用户id
+    private static final String selectMoviesByUserIdAll = "select MovieID from allratings where UserID = ";
+
+    //查询电影根据用户id
     private static final String selectMoviesByUserIdBase = "select MovieID from baseratings where UserID = ";
 
     //查询用户id根据电影
     private static final String selectUsersByMovieId = "select UserID from ratings where MovieID = ";
+
+    //查询用户id根据电影
+    private static final String selectUserByMovieIdAll = "select UserID from allratings where MovieID = ";
 
 
 
@@ -97,6 +103,15 @@ public class BatchExcuteUtil {
      * 查询电影根据用户id
      * @return
      */
+    public PreparedStatement selectMoviesByUserIdAll(Integer userId) throws SQLException {
+        preparedStatement = connection.prepareStatement(selectMoviesByUserIdAll+userId);
+        return preparedStatement;
+    }
+
+    /**
+     * 查询电影根据用户id
+     * @return
+     */
     public PreparedStatement selectMoviesByUserId(Integer userId) throws SQLException {
         preparedStatement = connection.prepareStatement(selectMoviesByUserId+userId);
         return preparedStatement;
@@ -117,6 +132,15 @@ public class BatchExcuteUtil {
      */
     public PreparedStatement selectUsersByMovieId(Integer movieId) throws SQLException {
         preparedStatement = connection.prepareStatement(selectUsersByMovieId+movieId);
+        return preparedStatement;
+    }
+
+    /**
+     * //查询用户id根据电影
+     * @return
+     */
+    public PreparedStatement selectUserByMovieIdAll(Integer movieId) throws SQLException {
+        preparedStatement = connection.prepareStatement(selectUserByMovieIdAll+movieId);
         return preparedStatement;
     }
 
@@ -261,8 +285,8 @@ public class BatchExcuteUtil {
         return preparedStatement;
     }
 
-    public PreparedStatement selectUser() throws SQLException{
-        String str = "SELECT UserID from ratings group by UserID";
+    public PreparedStatement selectAllUser() throws SQLException{
+        String str = "SELECT UserID from allratings group by UserID";
         preparedStatement = connection.prepareStatement(str);
         return preparedStatement;
     }

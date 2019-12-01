@@ -9,7 +9,7 @@ import java.util.*;
 /**
  * 根据权重第二次处理推荐列表
  */
-public class thirdSortMainKmeans10 {
+public class thirdSortMainKmeans40 {
     private static Map<Integer,Integer> movieKindMap;
     private static Map<Integer,List<Integer>> KindMovieMap;
     private static List<Integer> movieKind;
@@ -20,8 +20,8 @@ public class thirdSortMainKmeans10 {
         //静态获取数据库连接
         //初始化movieKind
         try {
-            KindMovieMap = getKindMovieByReadFile(10);
-            movieKindMap = getMovieKindByReadFile(10);
+            KindMovieMap = getKindMovieByReadFile(40);
+            movieKindMap = getMovieKindByReadFile(40);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -61,7 +61,7 @@ public class thirdSortMainKmeans10 {
                 //输出到文件
                 //将结果输出到文件
                 StringBuffer str = new StringBuffer();
-                FileWriter fw = new FileWriter("D:\\OldRecommentAlgorithmWithoutAverage\\1M\\sort\\resultThirdSortTop"+N+"Threshold"+thresold+"Len"+fileN+"K10.txt", true);
+                FileWriter fw = new FileWriter("D:\\OldRecommentAlgorithmWithoutAverage\\1M\\sort\\resultThirdSortTop"+N+"Threshold"+thresold+"Len"+fileN+"K40.txt", true);
                 Set set = afterSelectMap.entrySet();
                 Iterator iter = set.iterator();
                 while(iter.hasNext()){
@@ -87,7 +87,7 @@ public class thirdSortMainKmeans10 {
      */
     private static Map<Integer, List<Integer>> readFile(Integer N) throws IOException{
         Map<Integer, List<Integer>> resultMap = new HashMap<>();
-        BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream("D:\\OldRecommentAlgorithmWithoutAverage\\1M\\sort\\resultAgainSortTop"+N+"K10.txt")));
+        BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream("D:\\OldRecommentAlgorithmWithoutAverage\\1M\\sort\\resultAgainSortTop"+N+"K40.txt")));
         String data;
         Integer tempUserId;
         String tempMovieIds;
@@ -122,16 +122,16 @@ public class thirdSortMainKmeans10 {
         List<Integer> resultList = new ArrayList<>();
         //遍历推荐列表，计算出各聚类的初始化权重,即各C类有多少个
         Integer tempMovieKind;
-        List<Integer> C1List = new ArrayList<>();
-        List<Integer> C2List = new ArrayList<>();
-        List<Integer> C3List = new ArrayList<>();
-        List<Integer> C4List = new ArrayList<>();
-        List<Integer> C5List = new ArrayList<>();
-        List<Integer> C6List = new ArrayList<>();
-        List<Integer> C7List = new ArrayList<>();
-        List<Integer> C8List = new ArrayList<>();
-        List<Integer> C9List = new ArrayList<>();
-        List<Integer> C10List = new ArrayList<>();
+        List<Integer> C1List = new ArrayList<>();List<Integer> C11List = new ArrayList<>();List<Integer> C21List = new ArrayList<>();List<Integer> C31List = new ArrayList<>();
+        List<Integer> C2List = new ArrayList<>();List<Integer> C12List = new ArrayList<>();List<Integer> C22List = new ArrayList<>();List<Integer> C32List = new ArrayList<>();
+        List<Integer> C3List = new ArrayList<>();List<Integer> C13List = new ArrayList<>();List<Integer> C23List = new ArrayList<>();List<Integer> C33List = new ArrayList<>();
+        List<Integer> C4List = new ArrayList<>();List<Integer> C14List = new ArrayList<>();List<Integer> C24List = new ArrayList<>();List<Integer> C34List = new ArrayList<>();
+        List<Integer> C5List = new ArrayList<>();List<Integer> C15List = new ArrayList<>();List<Integer> C25List = new ArrayList<>();List<Integer> C35List = new ArrayList<>();
+        List<Integer> C6List = new ArrayList<>();List<Integer> C16List = new ArrayList<>();List<Integer> C26List = new ArrayList<>();List<Integer> C36List = new ArrayList<>();
+        List<Integer> C7List = new ArrayList<>();List<Integer> C17List = new ArrayList<>();List<Integer> C27List = new ArrayList<>();List<Integer> C37List = new ArrayList<>();
+        List<Integer> C8List = new ArrayList<>();List<Integer> C18List = new ArrayList<>();List<Integer> C28List = new ArrayList<>();List<Integer> C38List = new ArrayList<>();
+        List<Integer> C9List = new ArrayList<>();List<Integer> C19List = new ArrayList<>();List<Integer> C29List = new ArrayList<>();List<Integer> C39List = new ArrayList<>();
+        List<Integer> C10List = new ArrayList<>();List<Integer> C20List = new ArrayList<>();List<Integer> C30List = new ArrayList<>();List<Integer> C40List = new ArrayList<>();
         //TOP-N
         int n = 1;
         for(Integer movieId : moviesIdList){
@@ -177,26 +177,116 @@ public class thirdSortMainKmeans10 {
                 case 9:
                     C10List.add(movieId);
                     break;
+                case 10:
+                    C11List.add(movieId);
+                    break;
+                case 11:
+                    C12List.add(movieId);
+                    break;
+                case 12:
+                    C13List.add(movieId);
+                    break;
+                case 13:
+                    C14List.add(movieId);
+                    break;
+                case 14:
+                    C15List.add(movieId);
+                    break;
+                case 15:
+                    C16List.add(movieId);
+                    break;
+                case 16:
+                    C17List.add(movieId);
+                    break;
+                case 17:
+                    C18List.add(movieId);
+                    break;
+                case 18:
+                    C19List.add(movieId);
+                    break;
+                case 19:
+                    C20List.add(movieId);
+                    break;
+                case 20:
+                    C21List.add(movieId);
+                    break;
+                case 21:
+                    C22List.add(movieId);
+                    break;
+                case 22:
+                    C23List.add(movieId);
+                    break;
+                case 23:
+                    C24List.add(movieId);
+                    break;
+                case 24:
+                    C25List.add(movieId);
+                    break;
+                case 25:
+                    C26List.add(movieId);
+                    break;
+                case 26:
+                    C27List.add(movieId);
+                    break;
+                case 27:
+                    C28List.add(movieId);
+                    break;
+                case 28:
+                    C29List.add(movieId);
+                    break;
+                case 29:
+                    C30List.add(movieId);
+                    break;
+                case 30:
+                    C31List.add(movieId);
+                    break;
+                case 31:
+                    C32List.add(movieId);
+                    break;
+                case 32:
+                    C33List.add(movieId);
+                    break;
+                case 33:
+                    C34List.add(movieId);
+                    break;
+                case 34:
+                    C35List.add(movieId);
+                    break;
+                case 35:
+                    C36List.add(movieId);
+                    break;
+                case 36:
+                    C37List.add(movieId);
+                    break;
+                case 37:
+                    C38List.add(movieId);
+                    break;
+                case 38:
+                    C39List.add(movieId);
+                    break;
+                case 39:
+                    C40List.add(movieId);
+                    break;
             }
         }
         //初始化C类权重列表
         List<Integer> CWeight = new ArrayList<>();
-        CWeight.add(C1List.size());
-        CWeight.add(C2List.size());
-        CWeight.add(C3List.size());
-        CWeight.add(C4List.size());
-        CWeight.add(C5List.size());
-        CWeight.add(C6List.size());
-        CWeight.add(C7List.size());
-        CWeight.add(C8List.size());
-        CWeight.add(C9List.size());
-        CWeight.add(C10List.size());
+        CWeight.add(C1List.size());CWeight.add(C11List.size());CWeight.add(C21List.size());CWeight.add(C31List.size());
+        CWeight.add(C2List.size());CWeight.add(C12List.size());CWeight.add(C22List.size());CWeight.add(C32List.size());
+        CWeight.add(C3List.size());CWeight.add(C13List.size());CWeight.add(C23List.size());CWeight.add(C33List.size());
+        CWeight.add(C4List.size());CWeight.add(C14List.size());CWeight.add(C24List.size());CWeight.add(C34List.size());
+        CWeight.add(C5List.size());CWeight.add(C15List.size());CWeight.add(C25List.size());CWeight.add(C35List.size());
+        CWeight.add(C6List.size());CWeight.add(C16List.size());CWeight.add(C26List.size());CWeight.add(C36List.size());
+        CWeight.add(C7List.size());CWeight.add(C17List.size());CWeight.add(C27List.size());CWeight.add(C37List.size());
+        CWeight.add(C8List.size());CWeight.add(C18List.size());CWeight.add(C28List.size());CWeight.add(C38List.size());
+        CWeight.add(C9List.size());CWeight.add(C19List.size());CWeight.add(C29List.size());CWeight.add(C39List.size());
+        CWeight.add(C10List.size());CWeight.add(C20List.size());CWeight.add(C30List.size());CWeight.add(C40List.size());
         //遍历权重列表进行权重均衡
         while (true){
             if(Collections.max(CWeight) - Collections.min(CWeight) <= 1){
                 break;
             }
-            for(int i = 0 ; i < 10 ; i ++){
+            for(int i = 0 ; i < 40 ; i ++){
                 //如果该C类权重大于阈值
                 if(CWeight.get(i) > threshold){
                     CWeight.set(CWeight.indexOf(Collections.min(CWeight)),Collections.min(CWeight)+1);
@@ -205,28 +295,28 @@ public class thirdSortMainKmeans10 {
             }
         }
         //显示释放内存
-        C1List = null;
-        C2List = null;
-        C3List = null;
-        C4List = null;
-        C5List = null;
-        C6List = null;
-        C7List = null;
-        C8List = null;
-        C9List = null;
-        C10List = null;
+        C1List = null;C11List = null;C21List = null;C31List = null;
+        C2List = null;C12List = null;C22List = null;C32List = null;
+        C3List = null;C13List = null;C23List = null;C33List = null;
+        C4List = null;C14List = null;C24List = null;C34List = null;
+        C5List = null;C15List = null;C25List = null;C35List = null;
+        C6List = null;C16List = null;C26List = null;C36List = null;
+        C7List = null;C17List = null;C27List = null;C37List = null;
+        C8List = null;C18List = null;C28List = null;C38List = null;
+        C9List = null;C19List = null;C29List = null;C39List = null;
+        C10List = null;C20List = null;C30List = null;C40List = null;
         //根据权重重新选择，即C1类选CWeight.get(0)个,C2类选CWeight.get(1)个,C3类选CWeight.get(2)个
         //遍历重排序后的推荐列表
-        int C1 = 0;
-        int C2 = 0;
-        int C3 = 0;
-        int C4 = 0;
-        int C5 = 0;
-        int C6 = 0;
-        int C7 = 0;
-        int C8 = 0;
-        int C9 = 0;
-        int C10 = 0;
+        int C1 = 0;int C11 = 0;int C21 = 0;int C31 = 0;
+        int C2 = 0;int C12 = 0;int C22 = 0;int C32 = 0;
+        int C3 = 0;int C13 = 0;int C23 = 0;int C33 = 0;
+        int C4 = 0;int C14 = 0;int C24 = 0;int C34 = 0;
+        int C5 = 0;int C15 = 0;int C25 = 0;int C35 = 0;
+        int C6 = 0;int C16 = 0;int C26 = 0;int C36 = 0;
+        int C7 = 0;int C17 = 0;int C27 = 0;int C37 = 0;
+        int C8 = 0;int C18 = 0;int C28 = 0;int C38 = 0;
+        int C9 = 0;int C19 = 0;int C29 = 0;int C39 = 0;
+        int C10 = 0;int C20 = 0;int C30 = 0;int C40 = 0;
         for(Integer movieId : moviesIdList){
             //查询该电影类型
             tempMovieKind = movieKindMap.get(movieId);
@@ -292,6 +382,186 @@ public class thirdSortMainKmeans10 {
                     if(C10 < CWeight.get(9)){
                         resultList.add(movieId);
                         C10 ++ ;
+                    }
+                    break;
+                case 10:
+                    if(C11 < CWeight.get(10)){
+                        resultList.add(movieId);
+                        C11 ++ ;
+                    }
+                    break;
+                case 11:
+                    if(C12 < CWeight.get(11)){
+                        resultList.add(movieId);
+                        C12 ++ ;
+                    }
+                    break;
+                case 12:
+                    if(C13 < CWeight.get(12)){
+                        resultList.add(movieId);
+                        C13 ++ ;
+                    }
+                    break;
+                case 13:
+                    if(C14 < CWeight.get(13)){
+                        resultList.add(movieId);
+                        C14 ++ ;
+                    }
+                    break;
+                case 14:
+                    if(C15 < CWeight.get(14)){
+                        resultList.add(movieId);
+                        C15 ++ ;
+                    }
+                    break;
+                case 15:
+                    if(C16 < CWeight.get(15)){
+                        resultList.add(movieId);
+                        C16 ++ ;
+                    }
+                    break;
+                case 16:
+                    if(C17 < CWeight.get(16)){
+                        resultList.add(movieId);
+                        C17 ++ ;
+                    }
+                    break;
+                case 17:
+                    if(C18 < CWeight.get(17)){
+                        resultList.add(movieId);
+                        C18 ++ ;
+                    }
+                    break;
+                case 18:
+                    if(C19 < CWeight.get(18)){
+                        resultList.add(movieId);
+                        C19 ++ ;
+                    }
+                    break;
+                case 19:
+                    if(C20 < CWeight.get(19)){
+                        resultList.add(movieId);
+                        C20 ++ ;
+                    }
+                    break;
+                case 20:
+                    if(C21 < CWeight.get(20)){
+                        resultList.add(movieId);
+                        C21 ++ ;
+                    }
+                    break;
+                case 21:
+                    if(C22 < CWeight.get(21)){
+                        resultList.add(movieId);
+                        C22 ++ ;
+                    }
+                    break;
+                case 22:
+                    if(C23 < CWeight.get(22)){
+                        resultList.add(movieId);
+                        C23 ++ ;
+                    }
+                    break;
+                case 23:
+                    if(C24 < CWeight.get(23)){
+                        resultList.add(movieId);
+                        C24 ++ ;
+                    }
+                    break;
+                case 24:
+                    if(C25 < CWeight.get(24)){
+                        resultList.add(movieId);
+                        C25 ++ ;
+                    }
+                    break;
+                case 25:
+                    if(C26 < CWeight.get(25)){
+                        resultList.add(movieId);
+                        C26 ++ ;
+                    }
+                    break;
+                case 26:
+                    if(C27 < CWeight.get(26)){
+                        resultList.add(movieId);
+                        C27 ++ ;
+                    }
+                    break;
+                case 27:
+                    if(C28 < CWeight.get(27)){
+                        resultList.add(movieId);
+                        C28 ++ ;
+                    }
+                    break;
+                case 28:
+                    if(C29 < CWeight.get(28)){
+                        resultList.add(movieId);
+                        C29 ++ ;
+                    }
+                    break;
+                case 29:
+                    if(C30 < CWeight.get(29)){
+                        resultList.add(movieId);
+                        C30 ++ ;
+                    }
+                    break;
+                case 30:
+                    if(C31 < CWeight.get(30)){
+                        resultList.add(movieId);
+                        C31 ++ ;
+                    }
+                    break;
+                case 31:
+                    if(C32 < CWeight.get(31)){
+                        resultList.add(movieId);
+                        C32 ++ ;
+                    }
+                    break;
+                case 32:
+                    if(C33 < CWeight.get(32)){
+                        resultList.add(movieId);
+                        C33 ++ ;
+                    }
+                    break;
+                case 33:
+                    if(C34 < CWeight.get(33)){
+                        resultList.add(movieId);
+                        C34 ++ ;
+                    }
+                    break;
+                case 34:
+                    if(C35 < CWeight.get(34)){
+                        resultList.add(movieId);
+                        C35 ++ ;
+                    }
+                    break;
+                case 35:
+                    if(C36 < CWeight.get(35)){
+                        resultList.add(movieId);
+                        C36 ++ ;
+                    }
+                    break;
+                case 36:
+                    if(C37 < CWeight.get(36)){
+                        resultList.add(movieId);
+                        C37 ++ ;
+                    }
+                    break;
+                case 37:
+                    if(C38 < CWeight.get(37)){
+                        resultList.add(movieId);
+                        C38 ++ ;
+                    }
+                    break;
+                case 38:
+                    if(C39 < CWeight.get(38)){
+                        resultList.add(movieId);
+                        C39 ++ ;
+                    }
+                    break;
+                case 39:
+                    if(C40 < CWeight.get(39)){
+                        resultList.add(movieId);
+                        C40 ++ ;
                     }
                     break;
             }

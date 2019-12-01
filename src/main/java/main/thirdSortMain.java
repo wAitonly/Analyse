@@ -40,11 +40,11 @@ public class thirdSortMain {
     public static void main(String[] args) throws IOException, SQLException {
         //读取文件拿到各用户重排序后的推荐列表
 
-        for(int i = 1; i <= 5;i ++){
-            N = 5;
-            int fileN = (i -1)*5 + 10;
+        for(int i = 1; i < 5;i ++){
+            N = (5 * i) + 5;
+            int fileN = ((i -1)*5 + 10)*3;
             Map<Integer, List<Integer>> candicacyMap = readCandicacy(fileN);
-            for(thresold = 1; thresold < 5; thresold++){
+            for(thresold = N/Math.min(N,18); thresold <= N/Math.min(N,18); thresold++){
                 Map<Integer, List<Integer>> resultMap = readFile(fileN);
                 Iterator<Map.Entry<Integer, List<Integer>>> iterator = resultMap.entrySet().iterator();
                 Map.Entry<Integer, List<Integer>> tempEntry;
@@ -225,15 +225,15 @@ public class thirdSortMain {
         CWeight.add(C16List.size());CWeight.add(C17List.size());CWeight.add(C18List.size());
         //遍历权重列表进行权重均衡
         while (true){
+            if(Collections.max(CWeight) - Collections.min(CWeight) <= 1){
+                break;
+            }
             for(int i = 0 ; i < 18 ; i ++){
                 //如果该C类权重大于阈值
                 if(CWeight.get(i) > threshold){
                     CWeight.set(CWeight.indexOf(Collections.min(CWeight)),Collections.min(CWeight)+1);
                     CWeight.set(i,CWeight.get(i)-1);
                 }
-            }
-            if(Collections.max(CWeight) - Collections.min(CWeight) <= threshold){
-                break;
             }
         }
         //显示释放内存

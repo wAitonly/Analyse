@@ -67,6 +67,9 @@ public class UserKindPMain {
         int num = 1;
         for(Integer uesrID : userIdList){
             System.out.println("共"+size+"，正在进行"+(num++));
+            if(uesrID != 643){
+                continue;
+            }
             //画sse折线图
             tempDateset = new DefaultCategoryDataset();
             tempPCount = new TreeMap<>();
@@ -101,7 +104,7 @@ public class UserKindPMain {
             plot.setBackgroundPaint(ChartColor.WHITE);
             NumberAxis rangeAxis = (NumberAxis) plot.getRangeAxis();
             rangeAxis.setLowerBound(0);
-            rangeAxis.setUpperBound(18);
+            rangeAxis.setUpperBound(8);
             rangeAxis.setAutoTickUnitSelection(false);
             NumberTickUnit unit = new NumberTickUnit(1);
             rangeAxis.setTickUnit(unit);

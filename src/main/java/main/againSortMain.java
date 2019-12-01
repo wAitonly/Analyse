@@ -36,8 +36,8 @@ public class againSortMain {
 
     public static void main(String[] args) throws SQLException, IOException {
         int N;
-        for(int i = 4; i <= 4; i++){
-            N = (i -1)*5 + 10;
+        for(int i = 1; i <= 4; i++){
+            N = ((i -1)*5 + 10)*3;
             actionAfterSort(N);
         }
         //actionBeforeSort();

@@ -170,7 +170,7 @@ public class NoAgainSortMain {
                     CWeight.set(i,CWeight.get(i)-1);
                 }
             }
-            if(Collections.max(CWeight) - Collections.min(CWeight) <= threshold){
+            if(Collections.max(CWeight) - Collections.min(CWeight) <= 1){
                 break;
             }
         }

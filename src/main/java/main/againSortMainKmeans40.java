@@ -6,7 +6,7 @@ import java.io.*;
 import java.sql.SQLException;
 import java.util.*;
 
-public class againSortMainKmeans10 {
+public class againSortMainKmeans40 {
 
     private static Map<Integer,List<Integer>> KindMovieMap;
     private static Map<Integer,Integer> movieKindMap;
@@ -14,8 +14,8 @@ public class againSortMainKmeans10 {
     private static InfoGetUtil util = new InfoGetUtil();
     static {
         try {
-            KindMovieMap = getKindMovieByReadFile(10);
-            movieKindMap = getMovieKindByReadFile(10);
+            KindMovieMap = getKindMovieByReadFile(40);
+            movieKindMap = getMovieKindByReadFile(40);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -62,7 +62,7 @@ public class againSortMainKmeans10 {
         }
         //将结果输出到文件
         StringBuffer str = new StringBuffer();
-        FileWriter fw = new FileWriter("D:\\OldRecommentAlgorithmWithoutAverage\\1M\\sort\\resultAgainSortTop"+N+"K10.txt", true);
+        FileWriter fw = new FileWriter("D:\\OldRecommentAlgorithmWithoutAverage\\1M\\sort\\resultAgainSortTop"+N+"K40.txt", true);
         Set set = recommentMap.entrySet();
         Iterator iter = set.iterator();
         while (iter.hasNext()) {

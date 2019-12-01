@@ -134,6 +134,22 @@ public class InfoGetUtil {
      * @return
      * @throws SQLException
      */
+    public static List<Integer> selectMoviesByUserIdAll(Integer userId) throws SQLException {
+        List<Integer> resultList = new ArrayList<>();
+        PreparedStatement preparedStatement = new BatchExcuteUtil(connection).selectMoviesByUserIdAll(userId);
+        ResultSet resultSet = preparedStatement.executeQuery();
+        while (resultSet.next()){
+            resultList.add(resultSet.getInt("MovieID"));
+        }
+        return resultList;
+    }
+
+    /**
+     * 查询出该用户评论过的电影id
+     * @param userId
+     * @return
+     * @throws SQLException
+     */
     public static List<Integer> selectMoviesByUserIdBase(Integer userId) throws SQLException {
         List<Integer> resultList = new ArrayList<>();
         PreparedStatement preparedStatement = new BatchExcuteUtil(connection).selectMoviesByUserIdBase(userId);
@@ -153,6 +169,22 @@ public class InfoGetUtil {
     public static List<Integer> selectUsersByMovieId(Integer movieId) throws SQLException {
         List<Integer> resultList = new ArrayList<>();
         PreparedStatement preparedStatement = new BatchExcuteUtil(connection).selectUsersByMovieId(movieId);
+        ResultSet resultSet = preparedStatement.executeQuery();
+        while (resultSet.next()){
+            resultList.add(resultSet.getInt("UserID"));
+        }
+        return resultList;
+    }
+
+    /**
+     * 查询出评论过指定电影的用户集合
+     * @param movieId
+     * @return
+     * @throws SQLException
+     */
+    public static List<Integer> selectUserByMovieIdAll(Integer movieId) throws SQLException {
+        List<Integer> resultList = new ArrayList<>();
+        PreparedStatement preparedStatement = new BatchExcuteUtil(connection).selectUserByMovieIdAll(movieId);
         ResultSet resultSet = preparedStatement.executeQuery();
         while (resultSet.next()){
             resultList.add(resultSet.getInt("UserID"));
@@ -314,9 +346,9 @@ public class InfoGetUtil {
      * @return
      * @throws SQLException
      */
-    public static List<Integer> selectUser() throws SQLException {
+    public static List<Integer> selectAllUser() throws SQLException {
         List<Integer> resultList = new ArrayList<>();
-        PreparedStatement preparedStatement = new BatchExcuteUtil(connection).selectUser();
+        PreparedStatement preparedStatement = new BatchExcuteUtil(connection).selectAllUser();
         ResultSet resultSet = preparedStatement.executeQuery();
         while (resultSet.next()){
             resultList.add(resultSet.getInt("UserID"));

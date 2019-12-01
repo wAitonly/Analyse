@@ -44,10 +44,10 @@ public class TestMain {
 
     public static void main(String[] args) throws SQLException, IOException {
         Map<Integer,float[]> dataSet = buildMovieRatingTable();
-        int kMax = 11;
+        int kMax = 40;
         //画sse折线图
         DefaultCategoryDataset dateset = new DefaultCategoryDataset();
-        for(int k = 1; k < kMax ; k ++){
+        for(int k = 10; k <= kMax ; k=k+10){
             KMeansRun kRun =new KMeansRun(k, dataSet);
             Set<Cluster> clusterSet = kRun.run();
             //----------
@@ -88,10 +88,10 @@ public class TestMain {
         CategoryPlot plot = (CategoryPlot) chart.getPlot();
         plot.setBackgroundPaint(ChartColor.WHITE);
         NumberAxis rangeAxis = (NumberAxis) plot.getRangeAxis();
-        rangeAxis.setLowerBound(30000);
-        rangeAxis.setUpperBound(65000);
+        rangeAxis.setLowerBound(28000);
+        rangeAxis.setUpperBound(32000);
         rangeAxis.setAutoTickUnitSelection(false);
-        NumberTickUnit unit = new NumberTickUnit(800);
+        NumberTickUnit unit = new NumberTickUnit(200);
         rangeAxis.setTickUnit(unit);
         OutputStream os=new FileOutputStream("D:\\Kmeans\\sse.jpg");
         ChartUtilities.writeChartAsJPEG(os, chart, 1000, 1000);

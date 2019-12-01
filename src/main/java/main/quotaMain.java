@@ -43,13 +43,14 @@ public class quotaMain {
         String testStr = new InfoGetUtil().selectMovieKindByMovieId(2);
         System.out.println(testStr);
         int tempFileN;
-        for(int threshold = 1; threshold < 5; threshold++){
-            for(int i = 1; i <= 5;i ++){
+        //for(int threshold = 2; threshold < 6; threshold++){
+            for(int i = 2; i < 3;i ++){
 //                if(threshold == 38 && i < 3){
 //                    continue;
 //                }
                 tempFileN = (i -1)*5 + 10;
                 N = 5;
+                int threshold = 1;
                 //讀取推薦列表
                 Map<Integer, List<Integer>> recommentMap = readFile(threshold,N,tempFileN);
                 printHit(recommentMap,N,threshold,tempFileN);
@@ -63,7 +64,7 @@ public class quotaMain {
                 printCoverageAll(recommentMap,N,threshold,tempFileN);
                 recommentMap = null;
             }
-        }
+       // }
 
     }
 
@@ -76,7 +77,7 @@ public class quotaMain {
      */
     private static Map<Integer, List<Integer>> readFile(Integer threshold,Integer N,Integer fileN) throws IOException{
         Map<Integer, List<Integer>> resultMap = new HashMap<>();
-        BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream("D:\\OldRecommentAlgorithmWithoutAverage\\1M\\sort\\resultThirdSortTop"+N+"Threshold"+threshold+"Len"+fileN+".txt")));
+        BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream("D:\\OldRecommentAlgorithmWithoutAverage\\1M\\sort\\resultThirdSortTop"+N+"Threshold"+threshold+"Len"+fileN+"K40.txt")));
         String data;
         Integer tempUserId;
         String tempMovieIds;
